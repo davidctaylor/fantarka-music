@@ -43,7 +43,7 @@ class PlayerMain extends React.Component {
           err => console.log('XXX E:', err))
       );
 
-      this.props.dispatch(startTimer(setPlayerControl(PLAYER_CTRL_NEXT), 10000));
+      this.props.dispatch(startTimer(setPlayerControl(PLAYER_CTRL_NEXT), 5000));
 
     }, 2000);
   }

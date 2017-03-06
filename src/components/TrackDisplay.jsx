@@ -149,7 +149,7 @@ export class TrackDisplay extends React.Component {
 
   render() {
     return (
-      <div className="fantarka-text"
+      <div className='player-sc-text'
            ref={(e) => this.container = e}>
         <canvas
           ref={(e) => this.canvas = e}
