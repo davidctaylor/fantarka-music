@@ -21564,7 +21564,7 @@
 	          soundCloudClient: SOUNDCLOUD_CLIENT,
 	          soundCloudUserId: SOUNDCLOUD_USER_ID,
 	          soundCloudArtistUrl: 'https://soundcloud.com/fantarka',
-	          imageURL: '/avatars-000076817899-7gz26i-t500x500.jpg'
+	          imageURL: './avatars-000076817899-7gz26i-t500x500.jpg'
 	        })
 	      );
 	    }
@@ -25163,7 +25163,7 @@
 	          });
 	        });
 	
-	        _this2.props.dispatch((0, _actions.startTimer)((0, _actions.setPlayerControl)(_actions.PLAYER_CTRL_NEXT), 10000));
+	        _this2.props.dispatch((0, _actions.startTimer)((0, _actions.setPlayerControl)(_actions.PLAYER_CTRL_NEXT), 5000));
 	      }, 2000);
 	    }
 	  }, {
@@ -26274,7 +26274,7 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'fantarka-text',
+	        { className: 'player-sc-text',
 	          ref: function ref(e) {
 	            return _this2.container = e;
 	          } },
