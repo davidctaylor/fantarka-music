@@ -5,7 +5,7 @@ import configureStore from '../store/configureStore';
 import PlayerMain from './PlayerMain';
 
 import syncopate from '../fonts/syncopate.scss';
-import style from '../../stylesheets/sound-player.scss';
+import style from '../../stylesheets/fantarka.scss';
 
 const store = configureStore();
 

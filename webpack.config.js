@@ -38,12 +38,6 @@ module.exports = {
       {
         test: /\.scss$/,
         loaders: ["style-loader", "css-loader?sourceMap", "sass-loader?sourceMap"]
-        //loader: ExtractTextPlugin.extract('css!sass')
-        //loader: ExtractTextPlugin.extract(
-        //  'style', // The backup style loader
-        //  'css?sourceMap!sass?sourceMap'
-        //)
-        //loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader")
       },
       //FONTS
       {
@@ -67,7 +61,6 @@ module.exports = {
   //  includePaths: [ 'stylesheets' ]
   //},
   plugins: [
-    //new ExtractTextPlugin("fantarka.css"),
     new ExtractTextPlugin('fantarka.css', {
       allChunks: true
     }),
