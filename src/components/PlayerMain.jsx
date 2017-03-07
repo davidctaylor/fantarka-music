@@ -14,6 +14,7 @@ import {
   setAudioPlayer,
   setMouseVector,
   PLAYER_CTRL_NEXT,
+  PLAYER_NEXT_SPEED,
 } from '../actions/';
 
 const mapStateToProps = (state) => {
@@ -26,6 +27,7 @@ class PlayerMain extends React.Component {
   constructor(props) {
     super(props);
   }
+
 
   componentDidMount() {
     SC.initialize({
@@ -43,7 +45,7 @@ class PlayerMain extends React.Component {
           err => console.log('XXX E:', err))
       );
 
-      this.props.dispatch(startTimer(setPlayerControl(PLAYER_CTRL_NEXT), 5000));
+      this.props.dispatch(startTimer(setPlayerControl(PLAYER_CTRL_NEXT), PLAYER_NEXT_SPEED));
 
     }, 2000);
   }
@@ -51,7 +53,8 @@ class PlayerMain extends React.Component {
   render() {
     return (
       <div className='player-sc-components'
-           onMouseMove={(evt) => this.handleOnMove(evt)}>
+           //onMouseMove={(evt) => this.handleOnMove(evt)}
+           >
         <div className='player-sc-header'>Fantarka</div>
         <div className='player-sc-main'>
           <PlayerBackgroundImage
@@ -59,7 +62,7 @@ class PlayerMain extends React.Component {
             height={window.innerHeight}
             dispatch={this.props.dispatch}
             imageURL={this.props.imageURL}
-            mouseVector={this.props.mouseVector}
+            //mouseVector={this.props.mouseVector}
             //audioElement={this.state.audioElement}
           />
           <div className='player-sc-controls-container'>
@@ -76,9 +79,9 @@ class PlayerMain extends React.Component {
     );
   }
 
-  handleOnMove(evt) {
-    this.props.dispatch(setMouseVector({x: evt.clientX, y: evt.clientY}));
-  }
+  // handleOnMove(evt) {
+  //   this.props.dispatch(setMouseVector({x: evt.clientX, y: evt.clientY}));
+  // }
 
   handleOnClick(evt) {
     window.open(this.props.soundCloudArtistUrl, '_blank');

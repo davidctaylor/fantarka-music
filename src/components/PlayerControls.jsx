@@ -14,6 +14,7 @@ import {
   PLAYER_CTRL_PAUSE,
   PLAYER_CTRL_NEXT,
   PLAYER_CTRL_PREVIOUS,
+  PLAYER_NEXT_SPEED,
 } from '../actions';
 
 const mapStateToProps = (state) => {
@@ -69,7 +70,7 @@ class PlayerControls extends React.Component {
 
     case PLAYER_CTRL_PAUSE:
       this.props.dispatch(setPlayerState(PLAYER_STATE_IDLE));
-      this.props.dispatch(startTimer(setPlayerControl(PLAYER_CTRL_NEXT), 4000));
+      this.props.dispatch(startTimer(setPlayerControl(PLAYER_CTRL_NEXT), PLAYER_NEXT_SPEED));
       break;
 
     case PLAYER_CTRL_NEXT:

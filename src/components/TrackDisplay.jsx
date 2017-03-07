@@ -10,7 +10,7 @@ import {
 const TRACK_STATE_ACTIVE = Symbol('active'),
   TRACK_STATE_IDLE = Symbol('idle');
 
-const TEXT_SIZE = 30,
+const TEXT_SIZE = 43,
   TEXT_SPACE = 15,
   TEXT_TOP_OFFSET = 125 + 22;
 
@@ -55,7 +55,7 @@ const animateTrackActive = (trackObject, particle, width, height) => {
       y: (particle.hy - ((TEXT_SIZE + TEXT_SPACE) * (trackObject.index + 1))) + (TEXT_TOP_OFFSET) - particle.y
     },
     distance = Math.sqrt(direction.x * direction.x + direction.y * direction.y ),
-    speed = Math.random() * (distance > 1 ? Math.min(distance, 5) : distance);
+    speed = Math.random() * (distance > 1 ? Math.max(distance / 2, 5) : distance);
 
   direction = Particle.normalize(direction);
   direction.x = direction.x * speed;
@@ -127,20 +127,18 @@ export class TrackDisplay extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let width = this.canvas.width,
-      height = this.canvas.height;
-
     switch (nextProps.playerAction) {
     case PLAYER_EVENT_LOAD:
       this.initializeCanvas(nextProps.playerTracks);
-      animateTrackNext(this.trackObjects[nextProps.trackActive], width, height);
+      animateTrackNext(this.trackObjects[nextProps.trackActive], this.canvas.width, this.canvas.height);
       this.animate();
       break;
 
 
     case PLAYER_STATE:
     case PLAYER_CTRL:
-      this.setTrackNext(nextProps.playerAction, nextProps.playerState, nextProps.trackActive, width, height);
+      this.setTrackNext(nextProps.playerAction,
+        nextProps.playerState, nextProps.trackActive, this.canvas.width, this.canvas.height);
       break;
 
       default:

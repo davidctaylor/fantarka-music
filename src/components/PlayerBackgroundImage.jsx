@@ -67,10 +67,10 @@ export class PlayerBackgroundImage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.isLoading = nextProps.mouseVector.x === 0 && nextProps.mouseVector.y === 0;
-    this.mouseParticle.x = nextProps.mouseVector.x;
-    this.mouseParticle.y = nextProps.mouseVector.y;
-    this.mouseParticle.mass = DEFAULT_MOUSE_MASS;
+    //this.isLoading = nextProps.mouseVector.x === 0 && nextProps.mouseVector.y === 0;
+    //this.mouseParticle.x = nextProps.mouseVector.x;
+    //this.mouseParticle.y = nextProps.mouseVector.y;
+    //this.mouseParticle.mass = DEFAULT_MOUSE_MASS;
   }
 
   render = () => {
@@ -117,10 +117,11 @@ export class PlayerBackgroundImage extends React.Component {
 
     if (this.isLoading) {
       this.animateInitial();
-    } else {
-      this.mouseParticle.mass = this.mouseParticle.mass > 0 ? this.mouseParticle.mass -= 0.1 : 0;
-      this.animateMouseMove();
     }
+    // else {
+    //   this.mouseParticle.mass = this.mouseParticle.mass > 0 ? this.mouseParticle.mass -= 0.1 : 0;
+    //   this.animateMouseMove();
+    // }
 
     requestAnimationFrame(() => this.animate());
   }
@@ -176,5 +177,5 @@ PlayerBackgroundImage.propTypes = {
   height: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
   imageURL: PropTypes.string.isRequired,
-  mouseVector: PropTypes.object.isRequired
+  //mouseVector: PropTypes.object.isRequired
 }

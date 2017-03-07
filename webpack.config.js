@@ -1,31 +1,48 @@
-/* global __dirname */
+'use strict';
 
 var path = require('path');
-var sass = require('node-sass');
-
 var webpack = require('webpack');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-var dir_js = path.resolve(__dirname, 'src');
-var dir_html = path.resolve(__dirname, 'html');
-var dir_images = path.resolve(__dirname, 'images');
-var dir_styles = path.resolve(__dirname, 'stylesheets');
-var dir_build = path.resolve(__dirname, 'build');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(dir_js, 'index.jsx'),
+  devtool: 'eval-source-map',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    'react-hot-loader/patch',
+    path.join(__dirname, 'src/index.jsx')
+  ],
   output: {
-    path: dir_build,
-    publicPath: "/assets/",
-    filename: 'bundle.js'
+    path: path.join(__dirname, '/dist/'),
+    filename: '[name].js',
+    publicPath: '/'
   },
-  devServer: {
-    contentBase: dir_build,
-    outputPath: path.join(__dirname, 'build')
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'src/index.tpl.html',
+      inject: 'body',
+      filename: 'index.html'
+    }),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    })
+  ],
+  eslint: {
+    configFile: '.eslintrc',
+    failOnWarning: false,
+    failOnError: false
   },
-  devtool: 'source-map',
   module: {
+    preLoaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'eslint'
+      }
+    ],
     loaders: [
       {
         test: /\.jsx?$/,
@@ -36,49 +53,20 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/,
-        loaders: ["style-loader", "css-loader?sourceMap", "sass-loader?sourceMap"]
+        test: /\.json?$/,
+        loader: 'json'
       },
-      //FONTS
       {
-        test: /\.(otf|eot|svg|ttf|woff)/,
-        //loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader")
-        //loader: 'url-loader?limit=8192'
-        loader: 'file?name=[name].[ext]'
+        test: /\.scss$/,
+        loaders: ["style-loader", "css-loader?sourceMap", "sass-loader?sourceMap"],
+        //test: /\.scss$/,
+        //loader: 'style!css?modules&localIdentName=[name]---[local]---[hash:base64:5]!sass'
       },
-
-      { test: /\.svg$/, loader: 'url?limit=65000&mimetype=image/svg+xml&name=public/fonts/[name].[ext]' },
-      { test: /\.woff$/, loader: 'url?limit=65000&mimetype=application/font-woff&name=public/fonts/[name].[ext]' },
-      { test: /\.woff2$/, loader: 'url?limit=65000&mimetype=application/font-woff2&name=public/fonts/[name].[ext]' },
-      { test: /\.[ot]tf$/, loader: 'url?limit=65000&mimetype=application/octet-stream&name=public/fonts/[name].[ext]' },
-      { test: /\.eot$/, loader: 'url?limit=65000&mimetype=application/vnd.ms-fontobject&name=public/fonts/[name].[ext]' }
+      {test: /\.woff(2)?(\?[a-z0-9#=&.]+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
+      {test: /\.(ttf|eot|svg)(\?[a-z0-9#=&.]+)?$/, loader: 'file'}
     ]
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
-  //sassLoader: {
-  //  includePaths: [ 'stylesheets' ]
-  //},
-  plugins: [
-    new ExtractTextPlugin('fantarka.css', {
-      allChunks: true
-    }),
-    // Simply copies the files over
-    new CopyWebpackPlugin([
-      {from: dir_html} // to: output.path
-    ]),
-    new CopyWebpackPlugin([
-      {from: dir_images} // to: output.path
-    ]),
-    // Avoid publishing files when compilation fails
-    new webpack.NoErrorsPlugin(),
-    //new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: true })
-  ],
-  stats: {
-    // Nice colored output
-    colors: true
-  },
-  // Create Sourcemaps for the bundle
-  devtool: 'source-map',
 };
