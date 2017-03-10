@@ -1,6 +1,9 @@
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require('./webpack.config');
+var host = '10.0.0.249';
+//var host = 'localhost';
+var port = 3000;
 
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
@@ -12,7 +15,6 @@ new WebpackDevServer(webpack(config), {
     // to see success build.
     noInfo: false,
     stats: {
-      // Config for minimal console.log mess.
       assets: false,
       colors: true,
       version: false,
@@ -21,10 +23,10 @@ new WebpackDevServer(webpack(config), {
       chunks: false,
       chunkModules: false
     }
-}).listen(3000, 'localhost', function (err) {
+}).listen(port, host, function (err) {
     if (err) {
         console.log(err);
     }
 
-  console.log('Listening at localhost:3000');
+  console.log(`Listening at ${host}:${port}`);
 });

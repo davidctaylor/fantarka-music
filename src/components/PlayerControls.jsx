@@ -40,6 +40,7 @@ class PlayerControls extends React.Component {
           <div className='player-sc-play-button'>
             <PlayIcon
               playerState={this.props.playerState}
+              playerTracks={this.props.playerTracks}
               onClick={this.handleOnClick}
           />
           </div>

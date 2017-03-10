@@ -7,12 +7,16 @@ import {
   PLAYER_CTRL,
 } from '../actions/';
 
+const MOBILE = (window !== 'undefined') ? (window.screen.availWidth < 800) : true;
+
 const TRACK_STATE_ACTIVE = Symbol('active'),
   TRACK_STATE_IDLE = Symbol('idle');
 
-const TEXT_SIZE = 43,
+
+
+const TEXT_SIZE = 23,
   TEXT_SPACE = 15,
-  TEXT_TOP_OFFSET = 125 + 22;
+  TEXT_TOP_OFFSET = TEXT_SIZE * 3;
 
 const rgbToRgb = (r, g, b) => {
   return `rgb(${r}, ${g}, ${b})`;
@@ -117,7 +121,6 @@ export class TrackDisplay extends React.Component {
     super(props);
 
     this.canvas;
-    this.container;
     this.ctx = null;
     this.trackObjects = {};
     this.counter = 0;
@@ -147,17 +150,20 @@ export class TrackDisplay extends React.Component {
 
   render() {
     return (
-      <div className='player-sc-text'
-           ref={(e) => this.container = e}>
-        <canvas
-          ref={(e) => this.canvas = e}
-        />
+      <div className='player-sc-text'>
+        <div className='player-sc-spacer'></div>
+        <div className='player-sc-canvas'>
+          <canvas
+            ref={(e) => this.canvas = e}
+          />
+        </div>
       </div>);
   }
 
   initializeCanvas(tracks) {
-    this.canvas.width = this.container.clientWidth;
-    this.canvas.height = this.container.clientHeight;
+    const box = this.canvas.parentNode.getBoundingClientRect();
+    this.canvas.width = box.width;
+    this.canvas.height = box.height;
 
     this.ctx = this.canvas.getContext('2d');
     this.ctx.fillStyle = '#f8f8ff';
@@ -253,7 +259,7 @@ export class TrackDisplay extends React.Component {
   checkAlpha(x, y){
     let idx = ((this.imageData.width * y) + x ) * 4;
     return this.imageData.data[idx + 3] > 0;
-  };
+  }
 }
 
 TrackDisplay.propTypes = {

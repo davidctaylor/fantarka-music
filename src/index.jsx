@@ -11,7 +11,7 @@ const x = <Main
   soundCloudArtistUrl='https://soundcloud.com/fantarka'
   imageURL='./images/avatars-000076817899-7gz26i-t500x500.jpg'
 />;
-console.log('XXX1');
+
 ReactDOM.render(x,
   document.getElementById('player-sc-container')
 );

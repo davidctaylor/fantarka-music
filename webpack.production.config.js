@@ -14,7 +14,7 @@ module.exports = {
   // Where you want the output to go
   output: {
     path: path.join(__dirname, '/dist/'),
-    filename: '[name]-[hash].min.js',
+    filename: '[name].min.js',
     publicPath: '/'
   },
   plugins: [
@@ -34,7 +34,7 @@ module.exports = {
     // extracts the css from the js files and puts them on a separate .css file. this is for
     // performance and is used in prod environments. Styles load faster on their own .css
     // file as they dont have to wait for the JS to load.
-    new ExtractTextPlugin('[name]-[hash].min.css'),
+    new ExtractTextPlugin('[name].min.css'),
     // handles uglifying js
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
@@ -81,14 +81,16 @@ module.exports = {
         test: /\.scss$/,
         // we extract the styles into their own .css file instead of having
         // them inside the js.
-        loader: ExtractTextPlugin.extract('style', 'css?modules&localIdentName=[name]---[local]---[hash:base64:5]!sass')
-      }, {
-        test: /\.woff(2)?(\?[a-z0-9#=&.]+)?$/,
-        loader: 'url?limit=10000&mimetype=application/font-woff'
-      }, {
-        test: /\.(ttf|eot|svg)(\?[a-z0-9#=&.]+)?$/,
-        loader: 'file'
-      }]
+        loaders: ["style-loader", "css-loader?sourceMap", "sass-loader?sourceMap"],
+        //loader: ExtractTextPlugin.extract('style', 'css?modules&localIdentName=[name]---[local]---[hash:base64:5]!sass')
+      } //, {
+      //   test: /\.woff(2)?(\?[a-z0-9#=&.]+)?$/,
+      //   loader: 'url?limit=10000&mimetype=application/font-woff&name=public/fonts/[name].[ext]'
+      // }, {
+      //   test: /\.(ttf|eot|svg)(\?[a-z0-9#=&.]+)?$/,
+      //   loader: 'file'
+      // }
+      ]
   },
   postcss: [
     require('autoprefixer')

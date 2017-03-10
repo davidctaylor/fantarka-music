@@ -38,13 +38,18 @@ export class PlayerBackgroundImage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.canvas;
+    this.canvas = null;
+    this.container = null;
     this.ctx = null;
     this.particles = [];
     this.isLoading = true;
+    this.resizeTimeout = null
+    this.image = null;
   }
 
   componentDidMount() {
+    window.addEventListener('resize', (evt) => this.handleResize(evt));
+
     this.mouseParticle = new Particle({
       x: this.props.width / 2,
       y: this.props.height / 2,
@@ -54,6 +59,7 @@ export class PlayerBackgroundImage extends React.Component {
       direction: 0,
       speed: 0,
     });
+
     this.mouseParticle.mass = DEFAULT_MOUSE_MASS;
 
     this.ctx = this.canvas.getContext('2d');
@@ -66,6 +72,10 @@ export class PlayerBackgroundImage extends React.Component {
     );
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
   componentWillReceiveProps(nextProps) {
     //this.isLoading = nextProps.mouseVector.x === 0 && nextProps.mouseVector.y === 0;
     //this.mouseParticle.x = nextProps.mouseVector.x;
@@ -73,9 +83,9 @@ export class PlayerBackgroundImage extends React.Component {
     //this.mouseParticle.mass = DEFAULT_MOUSE_MASS;
   }
 
-  render = () => {
+  render() {
     return (
-      <div className='player-sc-image'>
+      <div className='player-sc-image' ref={(e) => this.container = e}>
         <canvas
           width={this.props.width}
           height={this.props.height}
@@ -84,24 +94,26 @@ export class PlayerBackgroundImage extends React.Component {
       </div>);
   }
 
-  renderImage = (image) => {
-    let width = this.props.width / 4,
-      height = this.props.height / 4;
+  renderImage (image) {
+    let width = this.canvas.width / 4,
+      height = this.canvas.height / 4;
 
-    this.ctx.drawImage(image, 0, 0, width, height);
+    this.image = image;
+    this.ctx.drawImage(this.image, 0, 0, width, height);
     this.imageData = this.ctx.getImageData(0, 0, width, height);
   }
 
-  createParticles = () => {
-    this.animate();
+  createParticles () {
+    const width = this.canvas.width,
+      height = this.canvas.height;
 
-    for (let x = 0; x < this.props.width / 4; x += 1) {
-      for (let y = 0; y < this.props.height / 4; y += 1) {
+    for (let x = 0; x < width / 4; x += 1) {
+      for (let y = 0; y < height / 4; y += 1) {
 
         let particle = new Particle({
           color: this.getPixelColor(x, y),
-          x: this.props.width / 2,
-          y: this.props.height / 2,
+          x: width / 2,
+          y: height / 2,
           hx: x * SPACING,
           hy: y * SPACING,
           g: 0,
@@ -110,25 +122,29 @@ export class PlayerBackgroundImage extends React.Component {
         this.particles.push(particle);
       }
     }
+
+    this.animate();
   }
 
-  animate = () => {
-    this.ctx.clearRect(0, 0, this.props.width, this.props.height);
+  animate () {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     if (this.isLoading) {
       this.animateInitial();
+      if (this.isLoading) {
+        requestAnimationFrame(() => this.animate());
+      }
     }
     // else {
     //   this.mouseParticle.mass = this.mouseParticle.mass > 0 ? this.mouseParticle.mass -= 0.1 : 0;
     //   this.animateMouseMove();
     // }
-
-    requestAnimationFrame(() => this.animate());
   }
 
-  animateInitial = () => {
-    this.particles.forEach((p) => {
-      let direction = {x: p.hx - p.x, y: p.hy - p.y},
+  animateInitial () {
+    this.isLoading = false;
+    this.particles.forEach((particle) => {
+      let direction = {x: particle.hx - particle.x, y: particle.hy - particle.y},
         distance = Math.sqrt(direction.x * direction.x + direction.y * direction.y),
         speed = Math.random() * (distance > 1 ? Math.min(distance, 100) : distance);
 
@@ -136,39 +152,61 @@ export class PlayerBackgroundImage extends React.Component {
       direction.x = direction.x * speed;
       direction.y = direction.y * speed;
 
-      p.x += direction.x;
-      p.y += direction.y;
+      particle.x += direction.x;
+      particle.y += direction.y;
 
-      this.drawParticle(p);
+      this.isLoading = distance > 0;
+
+      this.drawParticle(particle);
     });
   }
 
-  animateMouseMove = () => {
+  animateMouseMove () {
     this.particles.forEach((p) => {
       p.rejection(this.mouseParticle);
       p.update();
 
-      this.drawParticle(p);
-      if ((p.x > this.props.width || p.x < 0) &&
-        (p.y > this.props.height || p.y < 0)) {
-        p.x = p.hx;
-        p.y = p.hy;
+      this.drawParticle(particle);
+      if ((particle.x > this.props.width || particle.x < 0) &&
+        (particle.y > this.props.height || particle.y < 0)) {
+        particle.x = particle.hx;
+        particle.y = particle.hy;
       }
     });
   }
 
-  drawParticle = (p, reset) => {
+  drawParticle (particle, reset) {
     let particleSize = 2;
-    this.ctx.fillStyle = p.color;
-    this.ctx.fillRect(p.x, p.y, particleSize, particleSize);
+    this.ctx.fillStyle = particle.color;
+    this.ctx.fillRect(particle.x, particle.y, particleSize, particleSize);
   }
 
-  getPixelColor = (x, y) => {
+  getPixelColor (x, y) {
     let idx = ((this.imageData.width * y) + x ) * 4;
     return rgbToRgb(
       this.imageData.data[idx],
       this.imageData.data[idx + 1],
       this.imageData.data[idx + 2]);
+  }
+
+  handleResize(e) {
+    const width = this.container.clientWidth,
+      height = this.container.clientHeight;
+
+    clearTimeout(this.resizeTimeout);
+
+    this.resizeTimeout = setTimeout(() => {
+      this.canvas.width = width;
+      this.canvas.height = height;
+      this.particles = [];
+
+      this.renderImage(this.image);
+      this.createParticles();
+
+      this.isLoading = true;
+
+      requestAnimationFrame(() => this.animate());
+    }, 500);
   }
 }
 

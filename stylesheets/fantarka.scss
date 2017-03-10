@@ -22,6 +22,13 @@ $colorBackgroundR: '15,14,14';
     display: flex;
 }
 
+@mixin flexDefault() {
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
 @mixin flexRowContainer() {
     @include flexContainer();
 
@@ -34,6 +41,35 @@ $colorBackgroundR: '15,14,14';
 
     -webkit-flex-direction: column;
     flex-direction: column;
+}
+
+@mixin screenSize($range) {
+    $phoneBoundary: 600px;
+    $tabletPortraitBoundary: 900px;
+    $tabletLandscapeBoundary: 1200px;
+    $desktopBoundary: 1800px;
+
+    @if $range == phoneOnly {
+        @media (max-width: #{$phoneBoundary - 1}) {
+            @content;
+        }
+    } @else if $range == tabletPortrait {
+        @media (min-width: $phoneBoundary) {
+            @content;
+        }
+    } @else if $range == tabletLandscape {
+        @media (min-width: $tabletPortraitBoundary) {
+            @content;
+        }
+    } @else if $range == desktop {
+        @media (min-width: $tabletLandscapeBoundary) {
+            @content;
+        }
+    } @else if $range == largeDesktop {
+        @media (min-width: $desktopBoundary) {
+            @content;
+        }
+    }
 }
 
 html,
@@ -69,6 +105,7 @@ body {
             top: 0;
             left: 0;
             z-index: 0;
+            width: 100%;
         }
 
         .player-sc-header,
@@ -87,15 +124,15 @@ body {
             //font-weight: bold;
             padding-top: 0.5em;
             z-index: 100;
+
+            @include screenSize(phoneOnly) {
+                font-size: 4em;
+            }
         }
 
         .player-sc-main {
             @include flexContainer();
-
-            -webkit-flex: 1;
-            -moz-flex: 1;
-            -ms-flex: 1;
-            flex: 1;
+            @include flexDefault();
 
             .player-sc-controls-container {
                 @include flexContainer();
@@ -104,30 +141,41 @@ body {
                 width: 50%;
                 z-index: 100;
 
+                @include screenSize(phoneOnly) {
+                    width: 100%;
+                }
+
                 .player-sc-controls {
                     @include flexColumnContainer();
+                    @include flexDefault();
                     justify-content: space-between;
-
-                    width: 100%;
 
                     .player-sc-play-controls {
                         @include flexRowContainer();
+                        @include flexDefault();
+                        @include screenSize(phoneOnly) {
+                            @include flexColumnContainer();
+                        }
 
-                        -webkit-flex: 2;
-                        -moz-flex: 2;
-                        -ms-flex: 2;
-                        flex: 2;
-
+                        justify-content: center;
 
                         .player-sc-play-button {
                             position: relative;
                             @include flexContainer();
+                            @include screenSize(phoneOnly) {
+                                flex: 2 1 auto;
+                            }
+
+                            flex: 1;
+                            justify-content: center;
+                            align-items: center;
 
                             svg {
-                                position: relative;
-                                top: 125px;
-                                flex: none;
-                                transform: scale(1.5)
+                                transform: scale(1.5);
+                                align-items: flex-end;
+                                @include screenSize(phoneOnly) {
+                                    transform: scale(1.1);
+                                }
                             }
 
                             path {
@@ -146,27 +194,50 @@ body {
                         }
 
                         .player-sc-text {
-                            -webkit-flex-grow: 3;
-                            flex-grow: 3;
-                            canvas {
-                                width: 100%;
-                                height: 100%;
+                            flex: 1 1 auto;
+                            @include flexColumnContainer();
+
+                            .player-sc-spacer {
+                                flex: none;
+                                @include screenSize(tabletPortrait) {
+                                    @include flexContainer();
+                                    @include flexDefault();
+                                    flex: 1;
+                                }
+                            }
+
+                            .player-sc-canvas {
+                                @include flexDefault();
+                                flex: 2;
+
+                                canvas {
+                                }
                             }
                         }
                     }
 
                     .player-sc-track-controls {
-                        fill: $colorControls;
-                        //stroke: $colorControls;
-
                         position: absolute;
+                        top: 70%;
+                        left: 0;
+                        width: 100%;
 
                         -webkit-flex: none;
                         flex: none;
 
-                        top: 50%;
-                        left: 0;
-                        width: 100%;
+                        fill: $colorControls;
+
+
+                        @media only screen and (orientation : landscape) {
+                            width: 100%;
+                            left: 0%;
+                        }
+
+                        @include screenSize(phoneOnly) {
+                            top: 55%;
+                            left: 10%;
+                            width: 80%;
+                        }
 
                         .visible{
                             @include transitionVisible;
@@ -204,8 +275,7 @@ body {
                             }
 
                             .progress-bar {
-                                width: 80%;
-                                height: 4px;
+                                height: 6px;
 
                                 -webkit-flex-grow: 3;
                                 flex-grow: 3;

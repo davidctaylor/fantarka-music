@@ -24,7 +24,8 @@ export const PlayIcon = (props) => (
           d='M0 0 H12 V32 H0 z M20 0 H32 V32 H20 z'/>
     <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_PLAY)}
           transform='translate(0,-40) scale(1.2)'
-          className={props.playerState === PLAYER_STATE_IDLE ? 'visible' : 'hidden'}
+          className={props.playerState === PLAYER_STATE_IDLE &&
+          props.playerTracks.length > 0 ? 'visible' : 'hidden'}
           d='M0 64 L0 32 L16 48 Z'/>
   </PlayerControlIcons>
 );
