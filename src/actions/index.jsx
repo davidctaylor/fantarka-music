@@ -74,6 +74,8 @@ export const setAudioPlayer = (player) => {
     const {playerReducer} = getState();
 
     if (!playerReducer.player) {
+      player.audio.crossOrigin = 'anonymous';
+
       dispatch({
         type: PLAYER_EVENT_INIT, payload: {
           player: player

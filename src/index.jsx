@@ -9,7 +9,7 @@ const x = <Main
   soundCloudClient='904ef8653a4252c494b98c310300b467'
   soundCloudUserId='81132380'
   soundCloudArtistUrl='https://soundcloud.com/fantarka'
-  imageURL='./images/avatars-000076817899-7gz26i-t500x500.jpg'
+  imageURL='./avatars-000076817899-7gz26i-t500x500.jpg'
 />;
 
 ReactDOM.render(x,

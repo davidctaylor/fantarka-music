@@ -39,12 +39,11 @@ export class PlayerBackgroundImage extends React.Component {
     super(props);
 
     this.canvas = null;
-    this.container = null;
     this.ctx = null;
     this.particles = [];
     this.isLoading = true;
     this.resizeTimeout = null
-    this.image = null;
+    //this.image = null;
   }
 
   componentDidMount() {
@@ -85,7 +84,7 @@ export class PlayerBackgroundImage extends React.Component {
 
   render() {
     return (
-      <div className='player-sc-image' ref={(e) => this.container = e}>
+      <div className='player-sc-image'>
         <canvas
           width={this.props.width}
           height={this.props.height}
@@ -98,8 +97,8 @@ export class PlayerBackgroundImage extends React.Component {
     let width = this.canvas.width / 4,
       height = this.canvas.height / 4;
 
-    this.image = image;
-    this.ctx.drawImage(this.image, 0, 0, width, height);
+    //this.image = image;
+    this.ctx.drawImage(image, 0, 0, width, height);
     this.imageData = this.ctx.getImageData(0, 0, width, height);
   }
 
@@ -190,23 +189,15 @@ export class PlayerBackgroundImage extends React.Component {
   }
 
   handleResize(e) {
-    const width = this.container.clientWidth,
-      height = this.container.clientHeight;
+    const box = this.canvas.parentNode.getBoundingClientRect(),
+      img = new Image();
 
-    clearTimeout(this.resizeTimeout);
-
-    this.resizeTimeout = setTimeout(() => {
-      this.canvas.width = width;
-      this.canvas.height = height;
-      this.particles = [];
-
-      this.renderImage(this.image);
-      this.createParticles();
-
-      this.isLoading = true;
-
-      requestAnimationFrame(() => this.animate());
-    }, 500);
+    img.onload = () => {
+      this.canvas.width = box.width;
+      this.canvas.height = box.height;
+      this.ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, box.width, box.height);
+    }
+    img.src = this.canvas.toDataURL();
   }
 }
 

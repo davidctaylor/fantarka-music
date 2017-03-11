@@ -6,6 +6,7 @@ import SoundCloudAudio from 'soundcloud-audio';
 
 import { PlayerBackgroundImage } from './PlayerBackgroundImage';
 import PlayerControls from './PlayerControls';
+import PlayerAnalyzer from './PlayerAnalyzer';
 
 import {
   loadTracks,
@@ -64,6 +65,10 @@ class PlayerMain extends React.Component {
             imageURL={this.props.imageURL}
             //mouseVector={this.props.mouseVector}
             //audioElement={this.state.audioElement}
+          />
+          <PlayerAnalyzer
+            width={window.innerWidth}
+            height={window.innerHeight}
           />
           <div className='player-sc-controls-container'>
             <PlayerControls/>
