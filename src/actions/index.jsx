@@ -18,7 +18,7 @@ export const
   PLAYER_STATE_ACTIVE = Symbol('PlayerStateActive'),
   PLAYER_STATE_IDLE = Symbol('PlayerStateIdle');
 
-export const PLAYER_NEXT_SPEED = 6000;
+export const PLAYER_NEXT_SPEED = 5000;
 
 export const setMouseVector = (v) => {
   return {

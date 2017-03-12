@@ -14,16 +14,16 @@ export const PlayerControlIcons = (props) => (
       {props.children}
   </svg>
 );
-
+//M0 64 L0 32 L0 32 L6 32 L6 64 L10 64 L10 32 L16 32 L16 64 z'
 export const PlayIcon = (props) => (
   <PlayerControlIcons>
     <path onClick={(evt) => props.onClick(evt, (
         props.playerState === PLAYER_STATE_ACTIVE ? PLAYER_CTRL_PAUSE : PLAYER_CTRL_PLAY))}
-          transform='translate(0,0) scale(1.2)'
+          transform='translate(0, -40) scale(1.2)'
           className={props.playerState === PLAYER_STATE_ACTIVE ? 'visible' : 'hidden'}
-          d='M0 0 H12 V32 H0 z M20 0 H32 V32 H20 z'/>
+          d='M0 64 L0 32 L0 32 L8 32 L8 64 L10 64 L10 32 L18 32 L18 64'/>
     <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_PLAY)}
-          transform='translate(0,-40) scale(1.2)'
+          transform='translate(0, -40) scale(1.2)'
           className={props.playerState === PLAYER_STATE_IDLE &&
           props.playerTracks.length > 0 ? 'visible' : 'hidden'}
           d='M0 64 L0 32 L16 48 Z'/>

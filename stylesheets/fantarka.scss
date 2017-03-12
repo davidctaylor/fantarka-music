@@ -171,12 +171,12 @@ body {
                             justify-content: center;
                             align-items: center;
 
+                            @include screenSize(phoneOnly) {
+                                align-items: flex-end;
+                            }
+
                             svg {
                                 transform: scale(1.5);
-                                align-items: flex-end;
-                                @include screenSize(phoneOnly) {
-                                    transform: scale(1.1);
-                                }
                             }
 
                             path {
@@ -230,7 +230,7 @@ body {
 
                         @media only screen and (orientation : landscape) {
                             width: 100%;
-                            left: 0%;
+                            left: 10%;
                         }
 
                         @include screenSize(phoneOnly) {
