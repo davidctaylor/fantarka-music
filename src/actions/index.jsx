@@ -8,7 +8,8 @@ export const
   PLAYER_EVENT_LOAD = Symbol('PlayerEventLoad'),
   PLAYER_EVENT_PROGRESS = Symbol('PlayerEventProgress'),
   PLAYER_STATE = Symbol('PlayerState'),
-  PLAYER_CTRL = Symbol('PlayerControl');
+  PLAYER_CTRL = Symbol('PlayerControl'),
+  PLAYER_ABOUT_ACTIVE = Symbol('AboutActive');
 
 export const
   PLAYER_CTRL_PLAY = Symbol('PlayerControlPlay'),
@@ -27,11 +28,17 @@ export const setMouseVector = (v) => {
   }
 };
 
-
 export const setPlayerControl = (c) => {
   return {
     type: PLAYER_CTRL,
     payload: c
+  }
+};
+
+export const setAboutActive = () => {
+  return {
+    type: PLAYER_ABOUT_ACTIVE,
+    payload:  PLAYER_ABOUT_ACTIVE
   }
 };
 

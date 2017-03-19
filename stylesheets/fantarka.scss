@@ -13,6 +13,7 @@ $colorBackgroundR: '15,14,14';
 
 @mixin transitionHidden() {
     visibility: hidden;
+    opacity: 0;
     fill-opacity: 0;
     transition: fill-opacity 500ms ease-in;
 }
@@ -100,6 +101,42 @@ body {
 
         @include flexColumnContainer();
 
+        .player-sc-about {
+            position: absolute;
+            top: 20%;
+            left: 0%;
+            opacity: 0;
+            z-index: 200;
+            -webkit-flex: none;
+            -moz-flex: none;
+            -ms-flex: none;
+            flex: none;
+            width: 100%;
+
+            a {
+                color: $colorText;
+            }
+
+            &.visible {
+                transform: translateX(0%);
+                opacity: 1;
+                transition: all 500ms ease-in;
+            }
+
+            &.hidden {
+                opacity: 0;
+                transform: translateX(-100%);
+                transition: all 500ms ease-in;
+            }
+            .content {
+                width: 66.666%;
+                margin: 0 auto;
+                text-align: center;
+                font-size: 1.5em;
+                font-family: 'Josefin Sans',sans-serif;
+            }
+        }
+
         .player-sc-image {
             position: absolute;
             top: 0;
@@ -143,6 +180,14 @@ body {
 
                 @include screenSize(phoneOnly) {
                     width: 100%;
+                }
+
+                &.visible {
+                    @include transitionVisible;
+                }
+
+                &.hidden {
+                    @include transitionHidden;
                 }
 
                 .player-sc-controls {
@@ -328,17 +373,27 @@ body {
 
         .player-sc-footer {
             position: relative;
-
-            -webkit-align-self: flex-end;
-            align-self: flex-end;
-            align-items: center;
-            //padding-bottom: 20px;
-            //padding-right: 20px;
             padding-bottom: 1em;
             padding-right: 1em;
 
+            @include flexRowContainer();
+
+            svg {
+                cursor: pointer;
+            }
+
+            .player-sc-footer-about {
+                @include flexContainer();
+                flex: 1;
+                height: 30px;
+                width: 30px;
+                fill: $colorText;
+                padding-left: 1em;
+            }
+
             .player-sc-footer-social {
-                @include flexRowContainer();
+                @include flexContainer();
+                flex: 3;
                 justify-content: flex-end;
                 align-items: center;
 
@@ -346,18 +401,6 @@ body {
                     padding-right: 0.25em;
                 }
 
-                svg {
-                    //width: 32px;
-                    //height: 32px;
-                    cursor: pointer;
-                }
-
-                .soundcloud-link {
-                    padding-right: 0.75em;
-                }
-                .soundcloud-link:hover {
-                    cursor: pointer;
-                }
             }
         }
     }

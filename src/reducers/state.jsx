@@ -1,4 +1,5 @@
 import {
+  PLAYER_ABOUT_ACTIVE,
   MOUSE_VECTOR,
   TIMER_START,
   TIMER_STOP,
@@ -6,7 +7,8 @@ import {
 
 const initialState = {
   mouseVector: {x: 0, y: 0},
-  timers: {}
+  timers: {},
+  aboutActive: false,
 };
 
 const stateReducer = (state = initialState, action) => {
@@ -36,6 +38,12 @@ const stateReducer = (state = initialState, action) => {
         ...timers,
       }
     };
+
+  case PLAYER_ABOUT_ACTIVE:
+    return {
+      ...state,
+      aboutActive: !state.aboutActive
+    }
 
   default:
     return state;

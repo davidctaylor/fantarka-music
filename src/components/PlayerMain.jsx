@@ -7,6 +7,8 @@ import SoundCloudAudio from 'soundcloud-audio';
 import { PlayerBackgroundImage } from './PlayerBackgroundImage';
 import PlayerControls from './PlayerControls';
 import { SocialBar } from './SocialBar';
+import { About } from './About';
+import { AboutIcon } from './PlayerControlIcons';
 
 import {
   loadTracks,
@@ -14,6 +16,7 @@ import {
   setPlayerControl,
   setAudioPlayer,
   setMouseVector,
+  setAboutActive,
   PLAYER_CTRL_NEXT,
   PLAYER_NEXT_SPEED,
 } from '../actions/';
@@ -21,6 +24,7 @@ import {
 const mapStateToProps = (state) => {
   return {
     mouseVector: state.stateReducer.mouseVector,
+    aboutActive: state.stateReducer.aboutActive,
   };
 }
 
@@ -57,6 +61,7 @@ class PlayerMain extends React.Component {
         //onMouseMove={(evt) => this.handleOnMove(evt)}
       >
         <div className='player-sc-header'>Fantarka</div>
+        <About aboutActive={this.props.aboutActive}/>
         <div className='player-sc-main'>
           <PlayerBackgroundImage
             width={window.innerWidth}
@@ -66,14 +71,16 @@ class PlayerMain extends React.Component {
             //mouseVector={this.props.mouseVector}
             //audioElement={this.state.audioElement}
           />
-          <div className='player-sc-controls-container'>
+          <div className={`player-sc-controls-container ${this.props.aboutActive ? 'hidden' : 'visible'}`}>
             <PlayerControls/>
           </div>
         </div>
         <div className='player-sc-footer'>
-          <SocialBar imageURL={this.props.imageURL}
-                     handleOnClick={this.handleOnClick}
-          />
+            <AboutIcon width={32}
+                       handleOnClick={this.handleOnClick}/>
+            <SocialBar imageURL={this.props.imageURL}
+                       handleOnClick={this.handleOnClick}
+            />
         </div>
       </div>
     );
@@ -83,9 +90,12 @@ class PlayerMain extends React.Component {
   //   this.props.dispatch(setMouseVector({x: evt.clientX, y: evt.clientY}));
   // }
 
-  handleOnClickEvent (evt) {
-    console.log('XXX click...');
-    window.open(this.props.soundCloudArtistUrl, '_blank');
+  handleOnClickEvent (evt, type) {
+    if (type === 'about') {
+      this.props.dispatch(setAboutActive());
+    } else if (type === 'soundCloud') {
+      window.open(this.props.soundCloudArtistUrl, '_blank');
+    }
   }
 };
 
