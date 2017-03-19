@@ -385,10 +385,14 @@ body {
             .player-sc-footer-about {
                 @include flexContainer();
                 flex: 1;
-                height: 30px;
-                width: 30px;
+                height: 28px;
+                width: 28px;
                 fill: $colorText;
                 padding-left: 1em;
+                svg {
+                    height: 28px;
+                    width: 28px;
+                }
             }
 
             .player-sc-footer-social {
