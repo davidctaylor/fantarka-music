@@ -7,7 +7,9 @@ import {
   PLAYER_STATE_ACTIVE
 } from '../actions/';
 
-const BACKGROUND_COLOR = 'rgba(15, 14, 14, 0.5)';
+const BACKGROUND_COLOR = 'rgba(15, 14, 14, 0.5)',
+  ANALYZE_FFTSIZE = 128,
+  ANALYZE_MAX_VAL = 256;
 
 const mapStateToProps = (state) => {
   return {
@@ -47,6 +49,11 @@ const distance = (v1, v2) => {
   return Math.sqrt(dx * dx + dy * dy);
 };
 
+const normalize = (value, min, max) => {
+  return (value - min) / (max - min);
+  // y = height - (height * normal) ;
+}
+
 class PlayerAnalyzer extends React.Component {
   constructor(props) {
     super(props);
@@ -54,15 +61,15 @@ class PlayerAnalyzer extends React.Component {
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.connect(this.audioContext.destination);
-    this.analyser.fftSize = 128;
+    this.analyser.fftSize = ANALYZE_FFTSIZE ;
     this.dataArray = new Uint8Array(new Uint8Array(this.analyser.frequencyBinCount));
-    this.yOffset = 0;
   }
 
   componentDidMount() {
     if (isSafariMobile()) {
       return;
     }
+
     this.ctx = this.canvas.getContext('2d');
     this.ctx.lineCap = 'round';
   }
@@ -75,9 +82,11 @@ class PlayerAnalyzer extends React.Component {
     if (nextProps.action === PLAYER_EVENT_INIT) {
       const audioSrc = this.audioContext.createMediaElementSource(nextProps.player.audio);
       audioSrc.connect(this.analyser);
-
-      this.yOffset = Math.round(this.canvas.height * 0.5);
+      this.yOffset = 0; //Math.round(this.canvas.height * 0.5);
     } else if (nextProps.playerState === PLAYER_STATE_ACTIVE) {
+      const box = this.canvas.parentNode.getBoundingClientRect();
+      this.canvas.width = box.width;
+      this.canvas.height = box.height;
       this.ctx.strokeStyle = fillColor(1);
       this.animate();
     } else if (nextProps.playerState === PLAYER_STATE_IDLE) {
@@ -88,7 +97,7 @@ class PlayerAnalyzer extends React.Component {
 
   animate() {
     let points = [],
-      width = this.canvas.width * 0.75,//  / 2,//random(1, 2),
+      width = this.canvas.width * 0.9,//  / 2,//random(1, 2),
       xOffset = width / this.analyser.frequencyBinCount,
       wOffset = ((this.canvas.width / 2) - (width / 2));
 
@@ -100,20 +109,31 @@ class PlayerAnalyzer extends React.Component {
 
     this.analyser.getByteTimeDomainData(this.dataArray);
 
-    this.dataArray.forEach((d, idx) => {
-      let x = {
-        x: (wOffset + (idx * xOffset)),
-        y: (idx === 0 ? this.yOffset : this.yOffset - d)
-      }
-      points.push(x);
-    });
+    points[0] = {
+      x: wOffset + xOffset,
+      y: (this.canvas.height - (this.canvas.height * normalize(ANALYZE_MAX_VAL/2, 1, ANALYZE_MAX_VAL)))
+    };
+    points[1] = {
+      x: wOffset + xOffset,
+      y: (this.canvas.height - (this.canvas.height * normalize(ANALYZE_MAX_VAL/2, 1, ANALYZE_MAX_VAL)))
+    };
+    points[this.dataArray.length -1 ] = {
+      x: (wOffset + (xOffset * this.dataArray.length)),
+      y: (this.canvas.height - (this.canvas.height * normalize(ANALYZE_MAX_VAL/2, 1, ANALYZE_MAX_VAL)))
+    };
 
+    for(let i = 2; i < this.dataArray.length -1; i += 1) {
+      points[i] = {
+        x: (wOffset + (i * xOffset)),
+        y: (this.canvas.height - (this.canvas.height * normalize(this.dataArray[i], 1, ANALYZE_MAX_VAL)))
+      };
+    };
 
-    let i = Math.round(random(0, LINE_COLORS.length));
-    this.drawLineBlur(points, 50, 30, lineFillColor(i, random(50, 30)));
-    this.drawLine(points, lineFillColor(i, random(0.75, 1)));
-    this.drawLineEnd(points[1]);
-    this.drawLineEnd(points[ points.length -1 ]);
+    let colorIdx = Math.round(random(0, LINE_COLORS.length));
+    this.drawLineBlur(points, 50, 30, lineFillColor(colorIdx, random(50, 30)));
+    this.drawLine(points, lineFillColor(colorIdx, random(0.75, 1)));
+    this.drawLineStop(points[0]);
+    this.drawLineStop(points[ points.length -1 ]);
 
     if (this.props.playerState === PLAYER_STATE_ACTIVE) {
       requestAnimationFrame(() => this.animate());
@@ -153,19 +173,18 @@ class PlayerAnalyzer extends React.Component {
 
       if (idx === 0) {
         this.ctx.beginPath();
-        this.ctx.moveTo(point.x + dist, point.y);
-      } else {
-        this.ctx.moveTo(point.x + dist, point.y);
-        this.ctx.arc(point.x, point.y, dist, 0, Math.PI * 2, false);
       }
+
+      this.ctx.moveTo(point.x + dist, point.y);
+      this.ctx.arc(point.x, point.y, dist, 0, Math.PI * 2, false);
     });
 
     this.ctx.fill();
     this.ctx.restore();
   }
 
-  drawLineEnd(point) {
-    let radius = 8,//random(3, 8),
+  drawLineStop(point) {
+    let radius = random(3, 8),
       gradient = this.ctx.createRadialGradient(point.x, point.y, radius / 3, point.x, point.y, radius);
 
     gradient.addColorStop(0, fillColor(1));
@@ -181,8 +200,6 @@ class PlayerAnalyzer extends React.Component {
     return (
       <div className='player-sc-analyzer'>
         <canvas
-          width={this.props.width}
-          height={this.props.height}
           ref={(e) => this.canvas = e}
         />
       </div>

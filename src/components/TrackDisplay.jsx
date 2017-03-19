@@ -12,8 +12,6 @@ const MOBILE = (window !== 'undefined') ? (window.screen.availWidth < 800) : tru
 const TRACK_STATE_ACTIVE = Symbol('active'),
   TRACK_STATE_IDLE = Symbol('idle');
 
-
-
 const TEXT_SIZE = 23,
   TEXT_SPACE = 15,
   TEXT_TOP_OFFSET = TEXT_SIZE * 3;
@@ -57,6 +55,7 @@ const animateTrackActive = (trackObject, particle, width, height) => {
   let direction = {
       x: (width / 2 ) - (trackObject.animate.w / 2) + (particle.hx - particle.x),
       y: (particle.hy - ((TEXT_SIZE + TEXT_SPACE) * (trackObject.index + 1))) + (TEXT_TOP_OFFSET) - particle.y
+      //y: (particle.hy - ((TEXT_SIZE + TEXT_SPACE) * (trackObject.index + 1))) + (height / 2) - particle.y
     },
     distance = Math.sqrt(direction.x * direction.x + direction.y * direction.y ),
     speed = Math.random() * (distance > 1 ? Math.max(distance / 2, 5) : distance);
@@ -95,7 +94,7 @@ const animateTrackNext = (trackObject, width, height) => {
     particle.vx = 0;
     particle.vy = 0;
     particle.gravity = 0;
-    particle.x = (width / 2);
+    particle.x = (width * 0.5);
     particle.y = TEXT_TOP_OFFSET;
   });
 

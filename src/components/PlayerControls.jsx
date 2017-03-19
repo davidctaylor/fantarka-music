@@ -1,7 +1,8 @@
 import React, { PropTypes} from 'react';
 import { connect } from 'react-redux';
-import { PlayIcon, ProgressControls } from './PlayerControlIcons';
+import { PlayIcon, PlayPrev, PlayNext, ProgressControls } from './PlayerControlIcons';
 import { TrackDisplay } from './TrackDisplay';
+import PlayerAnalyzer from './PlayerAnalyzer';
 
 import {
   startTimer,
@@ -36,13 +37,25 @@ class PlayerControls extends React.Component {
   render() {
     return (
       <div className='player-sc-controls'>
+
         <div className='player-sc-play-controls'>
           <div className='player-sc-play-button'>
+            <PlayerAnalyzer/>
+            <PlayPrev
+              playerState={this.props.playerState}
+              playerTracks={this.props.playerTracks}
+              onClick={this.handleOnClick}
+            />
             <PlayIcon
               playerState={this.props.playerState}
               playerTracks={this.props.playerTracks}
               onClick={this.handleOnClick}
-          />
+            />
+            <PlayNext
+              playerState={this.props.playerState}
+              playerTracks={this.props.playerTracks}
+              onClick={this.handleOnClick}
+            />
           </div>
           <TrackDisplay
             playerAction={this.props.playerAction}

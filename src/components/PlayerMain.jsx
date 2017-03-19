@@ -6,7 +6,7 @@ import SoundCloudAudio from 'soundcloud-audio';
 
 import { PlayerBackgroundImage } from './PlayerBackgroundImage';
 import PlayerControls from './PlayerControls';
-import PlayerAnalyzer from './PlayerAnalyzer';
+import { SocialBar } from './SocialBar';
 
 import {
   loadTracks,
@@ -27,8 +27,8 @@ const mapStateToProps = (state) => {
 class PlayerMain extends React.Component {
   constructor(props) {
     super(props);
+    this.handleOnClick = (...evt) => this.handleOnClickEvent(...evt);
   }
-
 
   componentDidMount() {
     SC.initialize({
@@ -54,8 +54,8 @@ class PlayerMain extends React.Component {
   render() {
     return (
       <div className='player-sc-components'
-           //onMouseMove={(evt) => this.handleOnMove(evt)}
-           >
+        //onMouseMove={(evt) => this.handleOnMove(evt)}
+      >
         <div className='player-sc-header'>Fantarka</div>
         <div className='player-sc-main'>
           <PlayerBackgroundImage
@@ -66,19 +66,14 @@ class PlayerMain extends React.Component {
             //mouseVector={this.props.mouseVector}
             //audioElement={this.state.audioElement}
           />
-          <PlayerAnalyzer
-            width={window.innerWidth}
-            height={window.innerHeight}
-          />
           <div className='player-sc-controls-container'>
             <PlayerControls/>
           </div>
         </div>
         <div className='player-sc-footer'>
-          <img className="soundcloud-link"
-               onClick={(evt) => this.handleOnClick(evt)}
-               alt='Fantarka'
-               src='https://w.soundcloud.com/icon/assets/images/orange_transparent_56-94fc761.png'/>
+          <SocialBar imageURL={this.props.imageURL}
+                     handleOnClick={this.handleOnClick}
+          />
         </div>
       </div>
     );
@@ -88,7 +83,8 @@ class PlayerMain extends React.Component {
   //   this.props.dispatch(setMouseVector({x: evt.clientX, y: evt.clientY}));
   // }
 
-  handleOnClick(evt) {
+  handleOnClickEvent (evt) {
+    console.log('XXX click...');
     window.open(this.props.soundCloudArtistUrl, '_blank');
   }
 };

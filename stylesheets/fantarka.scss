@@ -100,7 +100,6 @@ body {
 
         @include flexColumnContainer();
 
-        .player-sc-analyzer,
         .player-sc-image {
             position: absolute;
             top: 0;
@@ -152,32 +151,47 @@ body {
                     justify-content: space-between;
 
                     .player-sc-play-controls {
-                        @include flexRowContainer();
+                        //@include flexRowContainer();
                         @include flexDefault();
-                        @include screenSize(phoneOnly) {
+                        //@include screenSize(phoneOnly) {
                             @include flexColumnContainer();
-                        }
+                        //}
 
                         justify-content: center;
 
+                        .player-sc-np-button,
                         .player-sc-play-button {
                             position: relative;
-                            @include flexContainer();
+                            //@include flexContainer();
+                            @include flexRowContainer();
+                            flex: 1 1 auto;
+                            justify-content: space-between;
                             @include screenSize(phoneOnly) {
-                                flex: 2 1 auto;
+                                justify-content: space-around;
                             }
 
-                            flex: 1;
-                            justify-content: center;
+                            //flex: 1;
+                            //justify-content: center;
                             align-items: center;
 
-                            @include screenSize(phoneOnly) {
-                                align-items: flex-end;
-                            }
+                            //@include screenSize(phoneOnly) {
+                            //    align-items: flex-end;
+                            //}
 
                             svg {
                                 transform: scale(1.5);
                             }
+
+                            //@include screenSize(phoneOnly) {
+                                svg {
+                                    //flex: 2;
+                                }
+                                svg:nth-of-type(2) {
+                                    //flex: 1;
+                                    //transform: scale(1.5);
+                                }
+                            //}
+
 
                             path {
                                 opacity: 1;
@@ -192,6 +206,28 @@ body {
                             .hidden {
                                 @include transitionHidden;
                             }
+
+                            .player-sc-analyzer {
+                                flex: none;
+                                position: absolute;
+                                top: 0;
+                                left: -25%;
+                                width: 150%;
+                                height: 100%;
+                                canvas {
+                                    //border: 1px solid red;
+                                }
+                                @include screenSize(phoneOnly) {
+                                    left: 0%;
+                                    width: 100%;
+                                }
+                            }
+                        }
+                        .player-sc-np-button {
+                            @include flexColumnContainer();
+                            svg {
+                                transform: scale(1.2);
+                            }
                         }
 
                         .player-sc-text {
@@ -199,17 +235,12 @@ body {
                             @include flexColumnContainer();
 
                             .player-sc-spacer {
-                                flex: none;
-                                @include screenSize(tabletPortrait) {
-                                    @include flexContainer();
-                                    @include flexDefault();
-                                    flex: 1;
-                                }
+                                display: none;
                             }
 
                             .player-sc-canvas {
                                 @include flexDefault();
-                                flex: 2;
+                                flex: 1;
 
                                 canvas {
                                 }
@@ -219,7 +250,7 @@ body {
 
                     .player-sc-track-controls {
                         position: absolute;
-                        top: 70%;
+                        top: 57%;
                         left: 0;
                         width: 100%;
 
@@ -229,12 +260,12 @@ body {
                         fill: $colorControls;
 
                         @media only screen and (orientation : landscape) {
-                            width: 100%;
+                            width: 80%;
                             left: 10%;
                         }
 
                         @include screenSize(phoneOnly) {
-                            top: 55%;
+                            top: 57%;
                             left: 10%;
                             width: 80%;
                         }
@@ -300,12 +331,33 @@ body {
 
             -webkit-align-self: flex-end;
             align-self: flex-end;
+            align-items: center;
+            //padding-bottom: 20px;
+            //padding-right: 20px;
+            padding-bottom: 1em;
+            padding-right: 1em;
 
-            .soundcloud-link {
-                padding-right: 1em;
-            }
-            .soundcloud-link:hover {
-                cursor: pointer;
+            .player-sc-footer-social {
+                @include flexRowContainer();
+                justify-content: flex-end;
+                align-items: center;
+
+                div {
+                    padding-right: 0.25em;
+                }
+
+                svg {
+                    //width: 32px;
+                    //height: 32px;
+                    cursor: pointer;
+                }
+
+                .soundcloud-link {
+                    padding-right: 0.75em;
+                }
+                .soundcloud-link:hover {
+                    cursor: pointer;
+                }
             }
         }
     }
