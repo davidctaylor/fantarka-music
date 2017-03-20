@@ -10,7 +10,7 @@ import {
 } from '../actions';
 
 export const PlayerControlIcons = (props) => (
-  <svg width='40px' height='40px' viewBox='0 0 40 40'>
+  <svg width='40px' height='40px' >
       {props.children}
   </svg>
 );
@@ -19,15 +19,15 @@ export const PlayIcon = (props) => (
   <PlayerControlIcons>
     <path onClick={(evt) => props.onClick(evt, (
         props.playerState === PLAYER_STATE_ACTIVE ? PLAYER_CTRL_PAUSE : PLAYER_CTRL_PLAY))}
-          transform='translate(0, -27)'
+          transform='translate(0, 5)'
           className={props.playerState === PLAYER_STATE_ACTIVE ? 'visible' : 'hidden'}
-          d='M0 34 L0 62 L16 62 L16 62 L16 34 L10 34 L10 62 L6 62 L6 34 Z'/>
+          d='M0 4 L0 28 L16 28 L20 28 L20 4 L12 4 L12 28 L8 28 L8 4 Z'/>
     <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_PLAY)}
-          transform='translate(0, -27)'
+          transform='translate(0, 5)'
           className={props.playerState === PLAYER_STATE_IDLE &&
           props.playerTracks.length > 0 ? 'visible' : 'hidden'}
           //d='M0 32 L0 64 L16 48 Z'/>
-          d='M0 32 L0 64 L24 48 Z'/>
+          d='M0 0 L0 32 L24 16 Z'/>
 
   </PlayerControlIcons>
 );
@@ -65,10 +65,10 @@ export const ProgressBar = (props) => (
 export const PlayPrev = (props) => (
   <PlayerControlIcons className='prev'>
     <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_PREVIOUS)}
-          transform='translate(0, -9) scale(0.6)'
+          transform='translate(0, 10) scale(0.6)'
           className={props.playerTracks.length > 0 ? 'visible' : 'hidden'}
           //d='M6 64 L6 48 L0 48 L16 64 L16 32 L0 48 L6 48 L6 32 L0 32 L0 64'/>
-          d='M24 64 L0 48 L24 32 L24 48 L48 32 L48 64 L24 48 Z'/>
+          d='M24 32 L0 16 L24 0 L24 16 L48 0 L48 32 L24 16 Z'/>
 
 
   </PlayerControlIcons>
@@ -77,10 +77,10 @@ export const PlayPrev = (props) => (
 export const PlayNext = (props) => (
   <PlayerControlIcons >
     <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_NEXT)}
-          transform='translate(0, -9)  scale(0.6)'
+          transform='translate(0, 10)  scale(0.6)'
           className={props.playerTracks.length > 0 ? 'visible' : 'hidden'}
           //d='M16 48 L10 48 L10 64 L16 64 L16 32 L10 32 L10 48 L16 48 L0 32 L0 64'/>
-          d='M0 32 L0 64 L24 48 L24 64 L48 48 L24 32 L24 48 Z'/>
+          d='M0 0 L0 32 L24 16 L24 32 L48 16 L24 0 L24 16 Z'/>
   </PlayerControlIcons>
 )
 //style="fill:#030104;"
