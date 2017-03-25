@@ -76,6 +76,14 @@ export const setPlayerState = (playerState) => {
   }
 };
 
+export const setPlayerSeek = (seekPosition) => {
+  return (dispatch, getState) => {
+    const {playerReducer} = getState();
+      playerReducer.player.audio.currentTime =
+        seekPosition * (playerReducer.player.audio.duration || 0) * 0.01;
+  }
+};
+
 export const setAudioPlayer = (player) => {
   return (dispatch, getState) => {
     const {playerReducer} = getState();

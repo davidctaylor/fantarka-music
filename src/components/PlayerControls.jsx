@@ -4,11 +4,15 @@ import { PlayIcon, PlayPrev, PlayNext, ProgressControls } from './PlayerControlI
 import { TrackDisplay } from './TrackDisplay';
 import PlayerAnalyzer from './PlayerAnalyzer';
 
+import Slider from 'rc-slider';
+
+
 import {
   startTimer,
   stopTimer,
-  setPlayerState,
   setPlayerControl,
+  setPlayerSeek,
+  setPlayerState,
   PLAYER_STATE_ACTIVE,
   PLAYER_STATE_IDLE,
   PLAYER_CTRL_PLAY,
@@ -44,17 +48,17 @@ class PlayerControls extends React.Component {
             <PlayPrev
               playerState={this.props.playerState}
               playerTracks={this.props.playerTracks}
-              onClick={this.handleOnClick}
+              handleOnClick={this.handleOnClick}
             />
             <PlayIcon
               playerState={this.props.playerState}
               playerTracks={this.props.playerTracks}
-              onClick={this.handleOnClick}
+              handleOnClick={this.handleOnClick}
             />
             <PlayNext
               playerState={this.props.playerState}
               playerTracks={this.props.playerTracks}
-              onClick={this.handleOnClick}
+              handleOnClick={this.handleOnClick}
             />
           </div>
           <TrackDisplay
@@ -64,11 +68,16 @@ class PlayerControls extends React.Component {
             trackActive={this.props.trackActive}
           />
           <div className='player-sc-track-controls'>
-            <ProgressControls
-              playerState={this.props.playerState}
-              trackProgress={this.props.trackProgress}
-              onClick={this.handleOnClick}
-            />
+            <div className={`controls ${this.props.playerState === PLAYER_STATE_ACTIVE ?
+              'visible' : 'hidden'}`}>
+              <Slider
+                min={0}
+                max={100}
+                defaultValue={0}
+                step={0.00001}
+                value={this.props.trackProgress}
+                onChange={this.handleSliderEvent}/>
+            </div>
           </div>
         </div>
       </div>
@@ -94,6 +103,12 @@ class PlayerControls extends React.Component {
         this.props.dispatch(setPlayerState(PLAYER_STATE_ACTIVE));
       }
       break;
+    }
+  }
+
+  handleSliderEvent = (value) => {
+    if (this.props.playerState === PLAYER_STATE_ACTIVE) {
+      this.props.dispatch(setPlayerSeek(value));
     }
   }
 }

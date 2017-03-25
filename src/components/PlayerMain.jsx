@@ -1,4 +1,4 @@
-import React, { PropTypes} from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import SC from 'soundcloud';
@@ -61,7 +61,9 @@ class PlayerMain extends React.Component {
         //onMouseMove={(evt) => this.handleOnMove(evt)}
       >
         <div className='player-sc-header'>Fantarka</div>
-        <About aboutActive={this.props.aboutActive}/>
+        <About handleOnClick={this.handleOnClick}
+               aboutActive={this.props.aboutActive}
+        />
         <div className='player-sc-main'>
           <PlayerBackgroundImage
             width={window.innerWidth}
@@ -90,20 +92,27 @@ class PlayerMain extends React.Component {
   //   this.props.dispatch(setMouseVector({x: evt.clientX, y: evt.clientY}));
   // }
 
-  handleOnClickEvent (evt, type) {
-    if (type === 'about') {
+  handleOnClickEvent(evt, type) {
+    switch (type) {
+    case 'about':
       this.props.dispatch(setAboutActive());
-    } else if (type === 'soundCloud') {
+      return;
+    case 'soundCloud':
       window.open(this.props.soundCloudArtistUrl, '_blank');
+      return;
+    case 'openMail':
+      window.location.href = "mailto:fantarkamusic@gmail.com";
+      //window.open('mailto:fantarkamusic@gmail.com', '_blank');
+      return;
     }
   }
 };
 
 PlayerMain.propTypes = {
-  soundCloudClient: PropTypes.string.isRequired,
-  soundCloudUserId: PropTypes.string.isRequired,
-  soundCloudArtistUrl: PropTypes.string.isRequired,
-  imageURL: PropTypes.string.isRequired,
+  soundCloudClient: React.PropTypes.string.isRequired,
+  soundCloudUserId: React.PropTypes.string.isRequired,
+  soundCloudArtistUrl: React.PropTypes.string.isRequired,
+  imageURL: React.PropTypes.string.isRequired,
 }
 
 export default connect(mapStateToProps)(PlayerMain);

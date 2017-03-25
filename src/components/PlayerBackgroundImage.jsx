@@ -1,4 +1,4 @@
-import React, { PropTypes} from 'react';
+import React from 'react';
 
 import { Particle } from '../lib/Particle';
 
@@ -202,9 +202,9 @@ export class PlayerBackgroundImage extends React.Component {
 }
 
 PlayerBackgroundImage.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  imageURL: PropTypes.string.isRequired,
-  //mouseVector: PropTypes.object.isRequired
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
+  imageURL: React.PropTypes.string.isRequired,
+  //mouseVector: React.PropTypes.object.isRequired
 }

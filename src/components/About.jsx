@@ -11,7 +11,7 @@ export const About = (props) => (
         Originally from the UK, Fantarka is now based in Washington, D.C., USA.
       </p>
       <p>
-        Contact us at <span>Fantarkamusic@gmail.com</span> for purchasing from
+        Contact us at <span onClick={(evt) => props.handleOnClick(evt, 'openMail')} className='contact'>fantarkamusic@gmail.com</span> for purchasing from
         our library or customized tracks.
       </p>
     </div>

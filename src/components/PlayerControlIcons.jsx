@@ -16,33 +16,34 @@ export const PlayerControlIcons = (props) => (
 );
 
 export const PlayIcon = (props) => (
-  <PlayerControlIcons>
-    <path onClick={(evt) => props.onClick(evt, (
-        props.playerState === PLAYER_STATE_ACTIVE ? PLAYER_CTRL_PAUSE : PLAYER_CTRL_PLAY))}
-          transform='translate(0, 5)'
-          className={props.playerState === PLAYER_STATE_ACTIVE ? 'visible' : 'hidden'}
-          d='M0 4 L0 28 L16 28 L20 28 L20 4 L12 4 L12 28 L8 28 L8 4 Z'/>
-    <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_PLAY)}
-          transform='translate(0, 5)'
-          className={props.playerState === PLAYER_STATE_IDLE &&
-          props.playerTracks.length > 0 ? 'visible' : 'hidden'}
-          //d='M0 32 L0 64 L16 48 Z'/>
-          d='M0 0 L0 32 L24 16 Z'/>
-
-  </PlayerControlIcons>
+  <div onClick={(evt) => props.handleOnClick(evt, (
+    props.playerState === PLAYER_STATE_ACTIVE ? PLAYER_CTRL_PAUSE : PLAYER_CTRL_PLAY))}>
+    <PlayerControlIcons>
+      <path
+        transform='translate(0, 5)'
+        className={props.playerState === PLAYER_STATE_ACTIVE ? 'visible' : 'hidden'}
+        d='M0 4 L0 28 L16 28 L20 28 L20 4 L12 4 L12 28 L8 28 L8 4 Z'/>
+      <path onClick={(evt) => props.handleOnClick(evt, PLAYER_CTRL_PLAY)}
+            transform='translate(0, 5)'
+            className={props.playerState === PLAYER_STATE_IDLE &&
+            props.playerTracks.length > 0 ? 'visible' : 'hidden'}
+        //d='M0 32 L0 64 L16 48 Z'/>
+            d='M0 0 L0 32 L24 16 Z'/>
+    </PlayerControlIcons>
+  </div>
 );
 
 // export const ProgressControls = (props) => (
 //   <div className={`controls ${props.playerState === PLAYER_STATE_ACTIVE ? 'visible' : 'hidden'}`}>
 //     <PlayerControlIcons>
-//     <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_PREVIOUS)}
+//     <path onClick={(evt) => props.handleOnClick(evt, PLAYER_CTRL_PREVIOUS)}
 //           className='prev'
 //           transform='translate(0, -28) scale(1)'
 //           d='M16 64 L0 48 L16 32 L16 48 L32 32 L32 64 L16 48 Z'/>
 //   </PlayerControlIcons>
 //     <ProgressBar trackProgress={props.trackProgress}/>
 //     <PlayerControlIcons className='next'>
-//       <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_NEXT)}
+//       <path onClick={(evt) => props.handleOnClick(evt, PLAYER_CTRL_NEXT)}
 //             transform='translate(0, -28) scale(1)'
 //             className='next'
 //             d='M0 32 L0 64 L16 48 L16 64 L32 48 L16 32 L16 48 Z'/>
@@ -50,38 +51,45 @@ export const PlayIcon = (props) => (
 //   </div>
 // );
 
-export const ProgressControls = (props) => (
-  <div className={`controls ${props.playerState === PLAYER_STATE_ACTIVE ? 'visible' : 'hidden'}`}>
-    <ProgressBar trackProgress={props.trackProgress}/>
-  </div>
-);
-
-export const ProgressBar = (props) => (
-  <div className='progress-bar'>
-    <div className='progress' style={{width:`${props.trackProgress}%`}}></div>
-  </div>
-)
+// export const ProgressControls = (props) => (
+//   <div className={`controls ${props.playerState === PLAYER_STATE_ACTIVE ? 'visible' : 'visible'}`}>
+//     <ProgressBar handleOnMove={props.handleOnMove}
+//                  trackProgress={props.trackProgress}
+//     />
+//   </div>
+// );
+//
+// export const ProgressBar = (props) => {
+//   return (
+//     <div className='progress-bar'>
+//       <div className='progress' style={{width:`${props.trackProgress}%`}}></div>
+//       <div className='circle'
+//            onMouseMove={(evt) => props.handleOnMove(evt)}
+//            style={{left:`${props.trackProgress}%`}}></div>
+//     </div>
+//   );
+// }
 
 export const PlayPrev = (props) => (
-  <PlayerControlIcons className='prev'>
-    <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_PREVIOUS)}
-          transform='translate(0, 10) scale(0.6)'
-          className={props.playerTracks.length > 0 ? 'visible' : 'hidden'}
-          //d='M6 64 L6 48 L0 48 L16 64 L16 32 L0 48 L6 48 L6 32 L0 32 L0 64'/>
-          d='M24 32 L0 16 L24 0 L24 16 L48 0 L48 32 L24 16 Z'/>
-
-
-  </PlayerControlIcons>
+  <div onClick={(evt) => props.handleOnClick(evt, PLAYER_CTRL_PREVIOUS)}>
+    <PlayerControlIcons className='prev'>
+      <path
+        transform='translate(0, 10) scale(0.6)'
+        className={props.playerTracks.length > 0 ? 'visible' : 'hidden'}
+        d='M24 32 L0 16 L24 0 L24 16 L48 0 L48 32 L24 16 Z'/>
+    </PlayerControlIcons>
+  </div>
 )
 
 export const PlayNext = (props) => (
-  <PlayerControlIcons >
-    <path onClick={(evt) => props.onClick(evt, PLAYER_CTRL_NEXT)}
-          transform='translate(0, 10)  scale(0.6)'
-          className={props.playerTracks.length > 0 ? 'visible' : 'hidden'}
-          //d='M16 48 L10 48 L10 64 L16 64 L16 32 L10 32 L10 48 L16 48 L0 32 L0 64'/>
-          d='M0 0 L0 32 L24 16 L24 32 L48 16 L24 0 L24 16 Z'/>
-  </PlayerControlIcons>
+  <div onClick={(evt) => props.handleOnClick(evt, PLAYER_CTRL_NEXT)}>
+    <PlayerControlIcons >
+      <path
+        transform='translate(0, 10)  scale(0.6)'
+        className={props.playerTracks.length > 0 ? 'visible' : 'hidden'}
+        d='M0 0 L0 32 L24 16 L24 32 L48 16 L24 0 L24 16 Z'/>
+    </PlayerControlIcons>
+  </div>
 )
 //style="fill:#030104;"
 export const SoundCloudLogo = (props) => (

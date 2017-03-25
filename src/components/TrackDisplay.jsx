@@ -1,4 +1,4 @@
-import React, { PropTypes} from 'react';
+import React from 'react';
 import { Particle } from '../lib/Particle';
 
 import {
@@ -262,6 +262,6 @@ export class TrackDisplay extends React.Component {
 }
 
 TrackDisplay.propTypes = {
-  playerState: PropTypes.symbol.isRequired,
-  playerTracks: PropTypes.array.isRequired
+  playerState: React.PropTypes.symbol.isRequired,
+  playerTracks: React.PropTypes.array.isRequired
 }
