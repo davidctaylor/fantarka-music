@@ -58,11 +58,6 @@ class PlayerAnalyzer extends React.Component {
   constructor(props) {
     super(props);
     this.canvas = null;
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    this.analyser = this.audioContext.createAnalyser();
-    this.analyser.connect(this.audioContext.destination);
-    this.analyser.fftSize = ANALYZE_FFTSIZE ;
-    this.dataArray = new Uint8Array(new Uint8Array(this.analyser.frequencyBinCount));
   }
 
   componentDidMount() {
@@ -80,16 +75,31 @@ class PlayerAnalyzer extends React.Component {
     }
 
     if (nextProps.action === PLAYER_EVENT_INIT) {
+
+      if (!this.audioContext) {
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.audioContext.resume();
+        this.analyser = this.audioContext.createAnalyser();
+        this.analyser.connect(this.audioContext.destination);
+        this.analyser.fftSize = ANALYZE_FFTSIZE ;
+        this.dataArray = new Uint8Array(new Uint8Array(this.analyser.frequencyBinCount));
+
+      } else {
+        this.audioContext.resume();
+      }
+
       const audioSrc = this.audioContext.createMediaElementSource(nextProps.player.audio);
       audioSrc.connect(this.analyser);
       this.yOffset = 0; //Math.round(this.canvas.height * 0.5);
     } else if (nextProps.playerState === PLAYER_STATE_ACTIVE) {
+      this.audioContext.resume();
       const box = this.canvas.parentNode.getBoundingClientRect();
       this.canvas.width = box.width;
       this.canvas.height = box.height;
       this.ctx.strokeStyle = fillColor(1);
       this.animate();
     } else if (nextProps.playerState === PLAYER_STATE_IDLE) {
+      this.audioContext.suspend();
       this.ctx.strokeStyle = fillColor(0.1);
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
