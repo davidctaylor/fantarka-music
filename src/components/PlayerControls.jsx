@@ -44,7 +44,7 @@ class PlayerControls extends React.Component {
 
         <div className='player-sc-play-controls'>
           <div className='player-sc-play-button'>
-            <PlayerAnalyzer/>
+            {/*<PlayerAnalyzer/>*/}
             <PlayPrev
               playerState={this.props.playerState}
               playerTracks={this.props.playerTracks}
