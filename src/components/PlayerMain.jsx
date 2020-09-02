@@ -42,8 +42,9 @@ class PlayerMain extends React.Component {
     this.props.dispatch(setAudioPlayer(new SoundCloudAudio(this.props.soundCloudClient)));
 
     setTimeout(() => {
-      SC.get('/tracks', {
-        user_id: this.props.soundCloudUserId,
+      SC.get(`/users/${this.props.soundCloudUserId}/tracks`, {
+        client_id: this.props.soundCloudClient,
+        // user_id: this.props.soundCloudUserId,
         limit: 100
       }).then(
         tracks => this.props.dispatch(loadTracks(tracks),
