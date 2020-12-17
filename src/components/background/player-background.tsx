@@ -129,18 +129,15 @@ export const PlayerBackground = ({url, width, height}: PlayerBackgroundProps) =>
   }, [url]);
 
   useEffect(() => {
-    // @ts-ignore
-    const box = canvasRef.current.parentNode.getBoundingClientRect();
     const img: HTMLImageElement = new Image();
-
     img.onload = () => {
       // @ts-ignore
-      canvasRef.current.width = box.width;
+      canvasRef.current.width = scrollPosition.w;
       // @ts-ignore
-      canvasRef.current.height = box.height;
+      canvasRef.current.height = scrollPosition.h;
       // @ts-ignore
       const ctx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, box.width, box.height);
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, scrollPosition.w, scrollPosition.h);
     }
     // @ts-ignore
     img.src = canvasRef.current.toDataURL();
