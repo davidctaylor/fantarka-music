@@ -1,0 +1,152 @@
+@import '../../common';
+
+.scroll-container-tracks {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+
+  .tracks-description {
+    margin: 0 auto;
+    text-align: center;
+
+    position: sticky;
+    top: 20vh;
+    overflow: hidden;
+    width: 50%;
+    padding-bottom: 40vh;
+    font-size: 16px;
+    line-height: 28px;
+
+    @include screenSize(tabletPortrait) {
+      top: 5vh;
+    }
+
+    .description-separator {
+      height: 1px;
+      text-align: center;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(225, 227, 226, 0.2);
+      width: 50%;
+    }
+
+    .description-contact {
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+
+  .track-list-container {
+    position: relative;
+    top: 0px;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    perspective: 2000px;
+
+    .track-container {
+      width: 50%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      align-content: center;
+      padding: 0.5em;
+      cursor: pointer;
+
+      $deviceWidth: 90%;
+
+      @media only screen and (min-width : 320px) and (max-width : 480px){
+        width: $deviceWidth;
+      }
+      //@media only screen and (min-width : 480px) and (max-width : 595px) {
+      //
+      //}
+      //@media only screen and (min-width : 595px) and (max-width : 690px) {
+      //  /*--- Small tablet portrait ---*/
+      //  width: $deviceWidth
+      //}
+      //@media only screen and (min-width : 690px) and (max-width : 800px) {
+      //  width: 90%;
+      //  /*--- Tablet portrait ---*/}
+      //@media only screen and (min-width : 800px) and (max-width : 1024px) {/*--- Small tablet landscape ---*/}
+      //@media only screen and (min-width : 1024px) and (max-width : 1224px) {/*--- Tablet landscape --- */}
+      ////@media only screen and (min-width : 320px) and (max-width : 480px) {
+      ////  width: 90%;
+      ////}
+      ////
+      ////@media only screen and (min-width : 481px) and (max-width : 595px) {
+      ////  width: 90%;
+      ////}
+
+
+      margin-bottom: 2em;
+      border: 1px solid rgba(225, 227, 226, 0.1);
+      height: 200px;
+      @media only screen and (min-width : 320px) and (max-width : 480px){
+        height: 150px;
+      }
+
+      .container-image {
+        width: 200px;
+        height: inherit;
+
+        @media only screen and (min-width : 320px) and (max-width : 480px){
+          width: 150px;
+        }
+
+        .image {
+          width: inherit;
+          height: inherit;
+        }
+      }
+
+      .container-info {
+        flex: 1;
+        padding-left: 0.5em;
+        @media only screen and (min-width : 320px) and (max-width : 480px){
+          padding-left: 1em;
+        }
+
+        .title {
+          font-size: x-large;
+          padding-bottom: 0.5em;
+          @media only screen and (min-width : 320px) and (max-width : 480px){
+            padding-bottom: 1em;
+          }
+        }
+
+        .description {
+        }
+      }
+    }
+  }
+
+  .menu-controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    //margin-left: 20%;
+    //margin-right: 20%;
+    // padding-top: 1em;
+
+    .control-button {
+      background-color: transparent;
+      box-shadow: none;
+      margin: 1em;
+
+      .control-button-ripple {
+        background-color: $soundCloudColor;
+        opacity: 0.2;
+      }
+    }
+  }
+}
+
+
+

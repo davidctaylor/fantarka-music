@@ -1,0 +1,33 @@
+$soundCloudColor: #FE5000;
+$fontFamily: Syncopate, 'Josefin Sans', sans-serif, serif;
+$colorText: #f8f8ff;
+$colorBackground: #0f0e0e;
+
+@mixin screenSize($range) {
+  $phoneBoundary: 600px;
+  $tabletPortraitBoundary: 900px;
+  $tabletLandscapeBoundary: 1200px;
+  $desktopBoundary: 1800px;
+
+  @if $range == phoneOnly {
+    @media (max-width: #{$phoneBoundary - 1}) {
+      @content;
+    }
+  } @else if $range == tabletPortrait {
+    @media (min-width: $phoneBoundary) {
+      @content;
+    }
+  } @else if $range == tabletLandscape {
+    @media (min-width: $tabletPortraitBoundary) {
+      @content;
+    }
+  } @else if $range == desktop {
+    @media (min-width: $tabletLandscapeBoundary) {
+      @content;
+    }
+  } @else if $range == largeDesktop {
+    @media (min-width: $desktopBoundary) {
+      @content;
+    }
+  }
+}
