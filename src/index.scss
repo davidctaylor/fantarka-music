@@ -1,0 +1,41 @@
+@import './common';
+
+html,
+body {
+  box-sizing: border-box;
+  margin: 0 auto;
+  font-family: $fontFamily;
+  font: 13px/1.25 $fontFamily;
+  // overflow: hidden;
+  background-color: $colorBackground;
+  color: $colorText;
+}
+
+.control-panel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+a {
+  text-decoration: none;
+  color: #444;
+}
+
+h1 {
+  font-weight: 300;
+}
+
+h2, h3, h4, h5, h6 {
+  font-weight: 400;
+}
