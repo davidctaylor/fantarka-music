@@ -82,12 +82,29 @@ export default playerSlice.reducer;
 
 export const audioPlayPlayTrack = (player: any, url?: string): AppThunk => async dispatch => {
   let state: AudioStateType = 'stopped';
+  console.log('XXX audioPlayPlayTrack:', player);
   if (!url) {
     player.pause();
   } else {
-    state = await player
+    state = 'playing';
+    player
       .play({streamUrl: url})
-      .then((v: any) => 'playing', (v: any) => 'stopped');
+      .then((v: any) => {
+        return 'playing'
+      }, (e: any) => {
+        console.log('Player start error', e);
+        return 'stopped';
+      });
+    // state = await player
+    //   .play({streamUrl: url})
+    //   .then((v: any) => {
+    //     console.log('XXX PLAY...', v);
+    //     return 'playing'
+    //   }, (v: any) => {
+    //     console.log('XXX PLAY E...', v);
+    //     return 'stopped';
+    //   });
+
   }
   dispatch(audioState(state));
 }

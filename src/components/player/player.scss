@@ -3,14 +3,13 @@
 .player-container {
 
   .content-header {
-    display: inline-flex;
+    display: flex;
     font-size: 5em;
     width: 100%;
     padding-top: 1em;
-    // padding: 1em;
-    // text-align: center;
     justify-content: center;
     z-index: 10;
+    min-height: 2em;
 
     @include screenSize(phoneOnly) {
       font-size: 4em;
@@ -34,6 +33,7 @@
 
     .content-main {
       flex: 1 0 auto;
+      z-index: 0;
 
       .description {
         position: absolute;
@@ -94,6 +94,7 @@
   height: 100px;
   position: absolute;
   bottom: 20px;
+  z-index: -1;
 
   .indicator-line {
     display: block;

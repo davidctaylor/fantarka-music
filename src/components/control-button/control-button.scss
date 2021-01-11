@@ -12,20 +12,21 @@
   cursor: pointer;
   outline: none;
   border: none;
-  -webkit-tap-highlight-color: transparent;
+  // -webkit-tap-highlight-color: transparent;
   display: inline-block;
   white-space: nowrap;
   text-decoration: none;
   vertical-align: baseline;
   text-align: center;
   margin: 0;
+  background-color: red;
 
   overflow: visible;
   border-radius: 50%;
 
   padding: 0;
-  background-color: $soundCloudColor;
-  box-shadow: 0 3px 5px -1px rgba(254, 80, 0,.2), 0 6px 10px 0 rgba(254, 80, 0,.14), 0 1px 18px 0 rgba(254, 80, 0,.12);
+  //background-color: $soundCloudColor;
+  //box-shadow: 0 3px 5px -1px rgba(254, 80, 0,.2), 0 6px 10px 0 rgba(254, 80, 0,.14), 0 1px 18px 0 rgba(254, 80, 0,.12);
 
   .control-button-ripple {
     position: absolute;
@@ -35,7 +36,8 @@
     content: '';
     border-radius: 50%;
     transform: scale(0);
-    background-color: rgba(0, 0, 0, 0.2);
+    // background-color: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 
     &.active {
       animation: ripple 300ms linear;
@@ -53,6 +55,7 @@
   .fa-step-backward,
   .fa-angle-left,
   .fa-angle-right {
+    cursor: pointer;
     color: transparent;
     stroke-width: 32px;
     fill: transparent;
