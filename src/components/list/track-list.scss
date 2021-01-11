@@ -21,6 +21,14 @@
       top: 5vh;
     }
 
+    @include screenSize(phoneOnly) {
+      width: 90%;
+    }
+
+    @media only screen and (orientation: landscape) {
+      width: 90%;
+    }
+
     .description-separator {
       height: 1px;
       text-align: center;
@@ -61,31 +69,15 @@
       @media only screen and (min-width : 320px) and (max-width : 480px){
         width: $deviceWidth;
       }
-      //@media only screen and (min-width : 480px) and (max-width : 595px) {
-      //
-      //}
-      //@media only screen and (min-width : 595px) and (max-width : 690px) {
-      //  /*--- Small tablet portrait ---*/
-      //  width: $deviceWidth
-      //}
-      //@media only screen and (min-width : 690px) and (max-width : 800px) {
-      //  width: 90%;
-      //  /*--- Tablet portrait ---*/}
-      //@media only screen and (min-width : 800px) and (max-width : 1024px) {/*--- Small tablet landscape ---*/}
-      //@media only screen and (min-width : 1024px) and (max-width : 1224px) {/*--- Tablet landscape --- */}
-      ////@media only screen and (min-width : 320px) and (max-width : 480px) {
-      ////  width: 90%;
-      ////}
-      ////
-      ////@media only screen and (min-width : 481px) and (max-width : 595px) {
-      ////  width: 90%;
-      ////}
 
+      @media only screen and (orientation: landscape) {
+        width: 90%;
+      }
 
       margin-bottom: 2em;
       border: 1px solid rgba(225, 227, 226, 0.1);
       height: 200px;
-      @media only screen and (min-width : 320px) and (max-width : 480px){
+      @media only screen and (min-width : 320px) and (max-width : 480px) {
         height: 150px;
       }
 
@@ -93,7 +85,7 @@
         width: 200px;
         height: inherit;
 
-        @media only screen and (min-width : 320px) and (max-width : 480px){
+        @media only screen and (min-width : 320px) and (max-width : 480px) {
           width: 150px;
         }
 
@@ -106,14 +98,14 @@
       .container-info {
         flex: 1;
         padding-left: 0.5em;
-        @media only screen and (min-width : 320px) and (max-width : 480px){
+        @media only screen and (min-width : 320px) and (max-width : 480px) {
           padding-left: 1em;
         }
 
         .title {
           font-size: x-large;
           padding-bottom: 0.5em;
-          @media only screen and (min-width : 320px) and (max-width : 480px){
+          @media only screen and (min-width : 320px) and (max-width : 480px) {
             padding-bottom: 1em;
           }
         }

@@ -3,7 +3,7 @@
   "name": "fantarka-web-page",
   "version": "2.0.0",
   "description": "Fantarka Music",
-  "homepage": "https://davidctaylor.github.io/fantarka-music/",
+  "homepage": "/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
