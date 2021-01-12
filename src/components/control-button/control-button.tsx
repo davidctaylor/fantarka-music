@@ -40,6 +40,7 @@ export const ControlButton = ({iconType, onClick}: ControlButtonType) => {
   const [active, setActive] = useState(false);
   return (
     <button className='control-button'
+            role='switch' aria-checked='false'
             onClick={() => {
               setActive(true);
               onClick(iconType);

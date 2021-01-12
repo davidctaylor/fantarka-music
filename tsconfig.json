@@ -23,7 +23,8 @@
       "./src/@types",
       "./node_modules/@types"
     ],
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "strictNullChecks": false
   },
   "include": [
     "src"

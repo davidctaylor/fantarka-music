@@ -15,7 +15,7 @@ const SPACING = 4;
 const loadBackgroundImage = (url: string): Promise<HTMLImageElement> => {
   const image: HTMLImageElement = new Image();
   const promise = new Promise<HTMLImageElement>((fulfill, fail) => {
-    image.onload = () => fulfill(image);
+    image.onload = () => fulfill(image)
     image.onerror = (...err) => fail(err);
   });
 
@@ -31,7 +31,6 @@ const getPixelColor = (data: ImageData, x: number, y: number): string => {
 
 const createParticles = (ref: Ref<HTMLCanvasElement>, data: ImageData): Particle[] => {
   const particles: Particle[] = [];
-  // @ts-ignore
   // @ts-ignore
   let width = ref.current.width;
   // @ts-ignore
@@ -51,12 +50,10 @@ const createParticles = (ref: Ref<HTMLCanvasElement>, data: ImageData): Particle
   return particles
 };
 
-const animate = (ref: Ref<HTMLCanvasElement>, particles: Particle[], isLoading: boolean): void => {
+const animate = (ref: HTMLCanvasElement, particles: Particle[], isLoading: boolean): void => {
   if (isLoading) {
-    // @ts-ignore
-    const ctx: CanvasRenderingContext2D = ref.current.getContext('2d');
-    // @ts-ignore
-    ctx.clearRect(0, 0, ref.current.width, ref.current.height);
+    const ctx: CanvasRenderingContext2D = ref.getContext('2d');
+    ctx.clearRect(0, 0, ref.width, ref.height);
 
     if (animateInitial(ref, particles)) {
       requestAnimationFrame(() => animate(ref, particles, true));
@@ -64,7 +61,7 @@ const animate = (ref: Ref<HTMLCanvasElement>, particles: Particle[], isLoading: 
   }
 }
 
-const animateInitial = (ref: Ref<HTMLCanvasElement>, particles: Particle[]): boolean => {
+const animateInitial = (ref: HTMLCanvasElement, particles: Particle[]): boolean => {
   let isLoading = true;
   particles.forEach((particle: Particle) => {
     let direction = {x: particle.hx - particle.x, y: particle.hy - particle.y},
@@ -85,9 +82,8 @@ const animateInitial = (ref: Ref<HTMLCanvasElement>, particles: Particle[]): boo
   return isLoading;
 }
 
-const drawParticle = (ref: Ref<HTMLCanvasElement>, particle: Particle) => {
-  // @ts-ignore
-  const ctx: CanvasRenderingContext2D = ref.current.getContext('2d');
+const drawParticle = (ref: HTMLCanvasElement, particle: Particle) => {
+  const ctx: CanvasRenderingContext2D = ref.getContext('2d');
   const particleSize = 2;
   ctx.fillStyle = particle.color;
   ctx.fillRect(particle.x, particle.y, particleSize, particleSize);
@@ -101,6 +97,7 @@ interface PlayerBackgroundProps {
 
 export const PlayerBackground = ({url, width, height}: PlayerBackgroundProps) => {
   const canvasRef: Ref<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null);
+  const [canvasImage, setCanvasImage] = useState<HTMLImageElement>(null);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>({x: 0, y: 0, w: 0, h: 0});
 
   useScrollPosition(['resize'], setScrollPosition);
@@ -108,38 +105,38 @@ export const PlayerBackground = ({url, width, height}: PlayerBackgroundProps) =>
   useEffect(() => {
     loadBackgroundImage(url)
       .then((img: HTMLImageElement) => {
-          // @ts-ignore
-          const box = canvasRef.current.parentNode.getBoundingClientRect();
-          // @ts-ignore
-          canvasRef.current.width = box.width;
-          // @ts-ignore
-          canvasRef.current.height = box.height;
-          // @ts-ignore
-          let width = box.width / 4;
-          // @ts-ignore
-          let height = box.height / 4;
-          // @ts-ignore
-          const ctx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          const particles: Particle[] = createParticles(canvasRef, ctx.getImageData(0, 0, width, height));
-          animate(canvasRef, particles, true);
-        },
-        (err) => console.log('Error loading image:', err)
-      );
+        setCanvasImage(img);
+      }, (err) => console.log('Error loading image:', err));
   }, [url]);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (!canvasImage) {
+      return;
+    }
+    // @ts-ignore
+    const box = canvasRef.current.parentNode.getBoundingClientRect();
+    canvasRef.current.width = box.width;
+    canvasRef.current.height = box.height;
+    let width = box.width / 4;
+    let height = box.height / 4;
+
+    const ctx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
+    ctx.drawImage(canvasImage, 0, 0, width, height);
+    const particles: Particle[] = createParticles(canvasRef, ctx.getImageData(0, 0, width, height));
+
+    animate(canvasRef.current, particles, true);
+  }, [canvasImage]);
 
   useEffect(() => {
     const img: HTMLImageElement = new Image();
     img.onload = () => {
-      // @ts-ignore
       canvasRef.current.width = scrollPosition.w;
-      // @ts-ignore
       canvasRef.current.height = scrollPosition.h;
-      // @ts-ignore
+
       const ctx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, scrollPosition.w, scrollPosition.h);
     }
-    // @ts-ignore
     img.src = canvasRef.current.toDataURL();
 
   }, [scrollPosition]);

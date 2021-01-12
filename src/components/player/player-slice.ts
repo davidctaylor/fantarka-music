@@ -4,6 +4,7 @@ import SC from 'soundcloud';
 
 import { AppThunk } from 'store/store'
 import { Track, PlayerControlType, AudioStateType } from 'interfaces/index';
+let last: string | null = null;
 
 interface PlayerState {
   audioState: AudioStateType;
@@ -80,19 +81,37 @@ export const {
 
 export default playerSlice.reducer;
 
-export const audioPlayPlayTrack = (player: any, url?: string): AppThunk => async dispatch => {
+export const audioPlayPlayTrack = (player: {player: any, ctx: any}, url?: string): AppThunk => async dispatch => {
   let state: AudioStateType = 'stopped';
-  console.log('XXX audioPlayPlayTrack:', player);
+
+
+  // console.log('XXX PLAYER:', player.ctx);
+
+
   if (!url) {
-    player.pause();
+    player.player.pause();
+    // player.ctx.suspend();
+    last = null;
   } else {
     state = 'playing';
-    player
-      .play({streamUrl: url})
+
+    if (url && last === url) {
+      return;
+    }
+    // if (player.ctx.state === 'suspended') {
+    //   player.ctx.resume();
+    // }
+    console.log('XXX url2:', url);
+    last = url;
+    player.player
+      .play({streamUrl: url}, 'auto')
       .then((v: any) => {
+        console.log('XXX PLAYER STARTED...', v);
+        state = 'playing';
         return 'playing'
       }, (e: any) => {
-        console.log('Player start error', e);
+        console.log('Player start error', url, e);
+        state = 'stopped';
         return 'stopped';
       });
     // state = await player
