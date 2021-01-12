@@ -9,7 +9,6 @@ import {
 } from 'react-redux'
 
 import SC from 'soundcloud';
-import SoundCloudAudio from 'soundcloud-audio';
 
 import { TrackList } from 'components/list/track-list';
 import { RootState } from 'store/root-reducer';
@@ -22,13 +21,12 @@ import {
 import { useScrollPosition } from 'components/effects/scroll';
 import { PlayerBackground } from 'components/background/player-background';
 import { PlayerControls } from 'components/controls/player-controls';
+import { PlayerAudio } from 'components/audio/player-audio';
 import { PlayerTrackName } from 'components/player-track-name/player-track-name';
 import { SocialBar } from 'components/social-bar/social-bar';
 
 import {
   fetchTracks,
-  trackProgress,
-  audioPlayPlayTrack,
   playerControls,
 } from './player-slice';
 import './player.scss';
@@ -37,46 +35,11 @@ const SOUNDCLOUD_CLIENT = '904ef8653a4252c494b98c310300b467';
 //const FANTARKA_SECRET = '578b9b29f07344fc61207d551082dd72';
 const SOUNDCLOUD_USER_ID = '81132380';
 
-const useSoundCloudPlayer = (): {player: any, ctx: any} => {
-  const dispatch = useDispatch();
-  const [player, setPlayer] = useState<{player: any, ctx: any}>({player: null, ctx: null});
-  if (!player.player) {
-    console.log('XXX INIT PLAYER...');
-    // @ts-ignore
-    // window.AudioContext = window.AudioContext || window.webkitAudioContext || null;
-    // // @ts-ignore
-    // if (!window.AudioContext) {
-    //   throw new Error(
-    //     'Could not find AudioContext. This may be because your browser does not support Web Audio.');
-    // }
-
-    const player: {player: any, ctx: any} = { player: new SoundCloudAudio(SOUNDCLOUD_CLIENT), ctx: null}; // new AudioContext()};
-    let last: number = -1;
-
-    player.player.audio.crossOrigin = 'anonymous';
-    player.player.on('timeupdate', (time: number) => {
-      const progress: number = (player.player.audio.currentTime / player.player.audio.duration) * 100;
-      if (progress !== last) {
-        dispatch(trackProgress((player.player.audio.currentTime / player.player.audio.duration) * 100 || 0));
-        last = progress;
-      }
-    });
-    setPlayer(player);
-  }
-
-  return player;
-};
-
 const Player: React.FC = () => {
-  const isLoaded: boolean = useSelector((state: RootState) => state.player.tracksLoaded);
-  const tracks: Track[] = useSelector((state: RootState) => state.player.tracks);
-  const trackActive: number = useSelector((state: RootState) => state.player.trackActive);
-  const activeAudioState: AudioStateType | null = useSelector((state: RootState) => state.player.audioState);
-  const controlAction: PlayerControlType = useSelector((state: RootState) => state.player.controlAction);
   const dispatch = useDispatch();
-  const player: {player: any, ctx: any} = useSoundCloudPlayer();
+  const isLoaded: boolean = useSelector((state: RootState) => state.player.tracksLoaded);
+  const activeAudioState: AudioStateType | null = useSelector((state: RootState) => state.player.audioState);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>({x: 0, y: 0, w: 0, h: 0});
-
 
   SC.initialize({
     client_id: SOUNDCLOUD_CLIENT
@@ -87,24 +50,6 @@ const Player: React.FC = () => {
       dispatch(fetchTracks(SOUNDCLOUD_USER_ID, SOUNDCLOUD_CLIENT));
     }
   }, [dispatch, isLoaded]);
-
-  useEffect(() => {
-    if (controlAction && controlAction !== 'idle') {
-      switch(controlAction) {
-        case 'previous':
-        case 'next':
-          if (activeAudioState !== 'stopped') {
-            dispatch(audioPlayPlayTrack(player, tracks[trackActive].stream_url));
-          }
-          break;
-        case 'play':
-          dispatch(audioPlayPlayTrack(player, tracks[trackActive].stream_url));
-          break;
-        case 'pause':
-          dispatch(audioPlayPlayTrack(player));
-      }
-    }
-  }, [dispatch, controlAction, player, tracks, trackActive, activeAudioState]);
 
   useEffect(
     () => {
@@ -123,15 +68,13 @@ const Player: React.FC = () => {
   };
 
   return <div className="player-container">
-    {/*<div>Hello<button>CLICK...</button></div>*/}
-    {/*<audio src='https://api.soundcloud.com/tracks/711425299/stream?client_id=904ef8653a4252c494b98c310300b467'*/}
-    {/*       controls autoPlay/>*/}
-
     <div className="container-sticky-content" style={containerStyle}>
       <PlayerBackground width={window.innerWidth} height={window.innerHeight} url={'./fantarka-avatar.jpg'}/>
+
       <div className="content-header">Fantarka</div>
       <div className="content-main">
         <PlayerControls />
+        <PlayerAudio clientId={SOUNDCLOUD_CLIENT}/>
         <PlayerTrackName />
         <div className="container-indicator">
           <div className="indicator-line"></div>

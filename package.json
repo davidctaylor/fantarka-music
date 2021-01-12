@@ -47,7 +47,6 @@
     "react-transition-group": "^4.4.1",
     "rxjs": "^6.6.3",
     "soundcloud": "^3.3.2",
-    "soundcloud-audio": "^1.4.0",
     "typescript": "3.5.3"
   },
   "devDependencies": {

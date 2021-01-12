@@ -4,7 +4,6 @@ import SC from 'soundcloud';
 
 import { AppThunk } from 'store/store'
 import { Track, PlayerControlType, AudioStateType } from 'interfaces/index';
-let last: string | null = null;
 
 interface PlayerState {
   audioState: AudioStateType;
@@ -14,6 +13,7 @@ interface PlayerState {
   tracksLoaded: boolean;
   trackActive: number;
   trackProgress: number;
+  trackSeek: number;
 }
 
 const loadTracks = (userId: string, clientId: string): Promise<Track[]> => {
@@ -35,6 +35,7 @@ const playerInitialState: PlayerState = {
   tracksLoaded: false,
   trackActive: 0,
   trackProgress: 0,
+  trackSeek: 0,
 };
 
 const playerSlice = createSlice({
@@ -66,6 +67,9 @@ const playerSlice = createSlice({
     },
     trackProgress(state: PlayerState, action: PayloadAction<number>) {
       state.trackProgress = action.payload;
+    },
+    trackSeek(state: PlayerState, action: PayloadAction<number>) {
+      state.trackSeek = action.payload;
     }
   }
 });
@@ -76,57 +80,11 @@ export const {
   audioState,
   playerControls,
   trackActive,
-  trackProgress
+  trackProgress,
+  trackSeek
 } = playerSlice.actions;
 
 export default playerSlice.reducer;
-
-export const audioPlayPlayTrack = (player: {player: any, ctx: any}, url?: string): AppThunk => async dispatch => {
-  let state: AudioStateType = 'stopped';
-
-
-  // console.log('XXX PLAYER:', player.ctx);
-
-
-  if (!url) {
-    player.player.pause();
-    // player.ctx.suspend();
-    last = null;
-  } else {
-    state = 'playing';
-
-    if (url && last === url) {
-      return;
-    }
-    // if (player.ctx.state === 'suspended') {
-    //   player.ctx.resume();
-    // }
-    console.log('XXX url2:', url);
-    last = url;
-    player.player
-      .play({streamUrl: url}, 'auto')
-      .then((v: any) => {
-        console.log('XXX PLAYER STARTED...', v);
-        state = 'playing';
-        return 'playing'
-      }, (e: any) => {
-        console.log('Player start error', url, e);
-        state = 'stopped';
-        return 'stopped';
-      });
-    // state = await player
-    //   .play({streamUrl: url})
-    //   .then((v: any) => {
-    //     console.log('XXX PLAY...', v);
-    //     return 'playing'
-    //   }, (v: any) => {
-    //     console.log('XXX PLAY E...', v);
-    //     return 'stopped';
-    //   });
-
-  }
-  dispatch(audioState(state));
-}
 
 export const fetchTracks = (userId: string, clientId: string): AppThunk => async dispatch => {
   try {

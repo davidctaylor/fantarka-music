@@ -129,6 +129,10 @@ export const PlayerBackground = ({url, width, height}: PlayerBackgroundProps) =>
   }, [canvasImage]);
 
   useEffect(() => {
+    console.log('XXX canvasRef SCROLL...', canvasRef);
+    if (!canvasRef.current) {
+      return;
+    }
     const img: HTMLImageElement = new Image();
     img.onload = () => {
       canvasRef.current.width = scrollPosition.w;

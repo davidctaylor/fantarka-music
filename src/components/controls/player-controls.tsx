@@ -10,7 +10,7 @@ import { PlayerControlType, AudioStateType } from 'interfaces/index';
 
 import { RootState } from 'store/root-reducer';
 import { ControlButton, ControlsType } from 'components/control-button/control-button';
-import { playerControls, trackProgress } from 'components/player/player-slice';
+import { playerControls, trackSeek } from 'components/player/player-slice';
 import './player-controls.scss';
 
 export const PlayerControls = () => {
@@ -41,7 +41,7 @@ export const PlayerControls = () => {
   };
 
   const handleSliderEvent = (p: number) => {
-    dispatch(trackProgress(p));
+    dispatch(trackSeek(p));
   };
 
   return <div className='player-controls'>
