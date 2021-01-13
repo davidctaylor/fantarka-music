@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Ref, useEffect, useRef } from 'react';
 import {
   useDispatch,
@@ -8,27 +8,28 @@ import {
 import {
   PlayerControlType,
   AudioStateType,
-  Track
+  Track,
 } from 'interfaces/index';
 
 import { RootState } from 'store/root-reducer';
-import './player-controls.scss';
 import { audioState, trackProgress, trackSeek } from "../player/player-slice";
 
 interface PlayerAudioProps {
-  clientId: string
+  clientId: string;
+  streamURL: string;
+  controlAction: PlayerControlType;
 }
 
-export const PlayerAudio = ({clientId}: PlayerAudioProps) => {
+export const PlayerAudio = ({clientId, streamURL, controlAction}: PlayerAudioProps) => {
   const dispatch = useDispatch();
   const tracks: Track[] = useSelector((state: RootState) => state.player.tracks);
   const activeTrack: number = useSelector((state: RootState) => state.player.trackActive);
   const activeSeek: number = useSelector((state: RootState) => state.player.trackSeek);
   const activeAudioState: AudioStateType | null = useSelector((state: RootState) => state.player.audioState);
   const audioRef: Ref<HTMLAudioElement> = useRef<HTMLAudioElement>(null);
-  const controlAction: PlayerControlType = useSelector((state: RootState) => state.player.controlAction);
+  const [playerActive, setPlayerActive] = useState<boolean>(false);
 
-  const track = (): () => void => {
+  const trackData = (): () => void => {
     let last = -1;
     return () => {
       const progress: number = (audioRef.current.currentTime / audioRef.current.duration) * 100;
@@ -37,6 +38,10 @@ export const PlayerAudio = ({clientId}: PlayerAudioProps) => {
         last = progress;
       }
     };
+  }
+
+  const trackURL = () => {
+    return `${tracks[activeTrack].stream_url}?client_id=${clientId}`;
   }
 
   useEffect(() => {
@@ -48,15 +53,15 @@ export const PlayerAudio = ({clientId}: PlayerAudioProps) => {
         dispatch(trackSeek(0));
       }
 
-      if (controlAction === 'pause') {
+      if (playerActive && controlAction === 'pause') {
         audioRef.current.pause();
         dispatch(audioState('stopped'));
       }
-      if (controlAction === 'play') {
+      if (playerActive && controlAction === 'play') {
         audioRef.current.play();
         dispatch(audioState('playing'));
       }
-      if (controlAction === 'next' || controlAction === 'previous') {
+      if (playerActive && (controlAction === 'next' || controlAction === 'previous')) {
         if (activeAudioState === 'playing') {
           audioRef.current.pause();
           audioRef.current.play();
@@ -65,14 +70,20 @@ export const PlayerAudio = ({clientId}: PlayerAudioProps) => {
         }
       }
     }
-  }, [dispatch, audioRef, tracks, activeTrack, activeAudioState, controlAction, clientId]);
+  }, [dispatch, audioRef, tracks, activeTrack, activeAudioState, controlAction, clientId, playerActive]);
 
   useEffect(() => {
     if (audioRef && tracks.length > 0 && activeAudioState === 'playing') {
       audioRef.current.currentTime = (activeSeek / 100) * audioRef.current.duration;
     }
-  }, [activeSeek]);
+  }, [activeSeek, tracks, activeAudioState]);
 
-  return <audio ref={audioRef} crossOrigin={'anonymous'}
-                onTimeUpdate={track()}/>;
+  return <audio autoPlay={!playerActive}
+                ref={audioRef}
+                src={trackURL()}
+                onPlay={(e) => {
+                  setPlayerActive(true);
+                }}
+                crossOrigin={'anonymous'}
+                onTimeUpdate={trackData()}/>;
 }

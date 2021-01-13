@@ -13,7 +13,6 @@ import SC from 'soundcloud';
 import { TrackList } from 'components/list/track-list';
 import { RootState } from 'store/root-reducer';
 import {
-  Track,
   PlayerControlType,
   ScrollPosition,
   AudioStateType
@@ -21,7 +20,6 @@ import {
 import { useScrollPosition } from 'components/effects/scroll';
 import { PlayerBackground } from 'components/background/player-background';
 import { PlayerControls } from 'components/controls/player-controls';
-import { PlayerAudio } from 'components/audio/player-audio';
 import { PlayerTrackName } from 'components/player-track-name/player-track-name';
 import { SocialBar } from 'components/social-bar/social-bar';
 
@@ -73,8 +71,7 @@ const Player: React.FC = () => {
 
       <div className="content-header">Fantarka</div>
       <div className="content-main">
-        <PlayerControls />
-        <PlayerAudio clientId={SOUNDCLOUD_CLIENT}/>
+        <PlayerControls clientId={SOUNDCLOUD_CLIENT}/>
         <PlayerTrackName />
         <div className="container-indicator">
           <div className="indicator-line"></div>
