@@ -9,15 +9,22 @@ import {
   useSelector,
 } from 'react-redux'
 
+import Loader from 'react-loader-spinner'
+
 import { RootState } from 'store/root-reducer'
 import { useScrollPosition } from 'components/effects/scroll';
-import { ScrollPosition, Track } from 'interfaces/index';
+import {
+  AudioStateType,
+  ScrollPosition,
+  Track
+} from 'interfaces/index';
 import { handleOnShareEvent } from 'lib/utils';
 import {
   playerControls,
   trackActive
 } from 'components/player/player-slice';
 import './track-list.scss';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 
 interface TrackListProps {
   onClick: (e: any) => void;
@@ -25,8 +32,9 @@ interface TrackListProps {
 
 export const TrackList = ({onClick }: TrackListProps) => {
   const dispatch = useDispatch();
-
   const tracks: Track[] = useSelector((state: RootState) => state.player.tracks);
+  const activeAudioState: AudioStateType | null = useSelector((state: RootState) => state.player.audioState);
+  const activeTrack: number = useSelector((state: RootState) => state.player.trackActive);
   const refTrackDesc = useRef<HTMLDivElement>(null);
   const [trackDescHeight, setTrackDescHeight] = useState<number>(0);
   const refTrackList = useRef<HTMLDivElement>(null);
@@ -52,7 +60,7 @@ export const TrackList = ({onClick }: TrackListProps) => {
       backgroundSize: 'cover',
     };
 
-    return <div key={i}  onClick={() => handleOnClickEvent(i)} className="track-container">
+    return <div key={i} onClick={() => handleOnClickEvent(i)} className="track-container">
       {(() => {
         if (t.artwork_url) {
           return (<div className="container-image">
@@ -62,9 +70,20 @@ export const TrackList = ({onClick }: TrackListProps) => {
           return (<div className="container-image"/>)
         }
       })()}
-      <div className="container-info">
-        <div className="title">{t.title}</div>
-        <div className="description">{t.description}</div>
+      <div className="container-content">
+        {activeAudioState === 'playing' && activeTrack === i &&
+          <Loader
+            className="container-loader"
+            type="Audio"
+            color="#f8f8ff"
+            height={20}
+            width={20}
+            timeout={0}
+          />}
+        <div className="container-info">
+          <div className="title">{t.title}</div>
+          <div className="description">{t.description}</div>
+        </div>
       </div>
     </div>
   });
