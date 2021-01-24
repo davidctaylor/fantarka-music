@@ -21,7 +21,6 @@ import {
 } from 'components/player/player-slice';
 import './player-controls.scss';
 
-
 interface PlayerControlsProps {
   clientId: string
 }
@@ -35,53 +34,6 @@ export const PlayerControls = ({clientId}: PlayerControlsProps) => {
   // const activeSeek: number = useSelector((state: RootState) => state.player.trackSeek);
   // const audioRef: Ref<HTMLAudioElement> = useRef<HTMLAudioElement>(null);
   const controlAction: PlayerControlType = useSelector((state: RootState) => state.player.controlAction);
-
-  // const handleTimeUpdate = (): () => void => {
-  //   let last = -1;
-  //   return () => {
-  //     const progress: number = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-  //     if (progress !== last) {
-  //       dispatch(trackProgress((progress > 0 ? progress : 0)));
-  //       last = progress;
-  //     }
-  //   };
-  // }
-
-  // useEffect(() => {
-  //   if (audioRef && tracks.length > 0) {
-  //     const url: string = `${tracks[activeTrack].stream_url}?client_id=${clientId}`;
-  //
-  //     if ((controlAction === 'play' || activeAudioState === 'playing') && audioRef.current.src !== url) {
-  //       audioRef.current.src = url;
-  //       // audioRef.current.load();
-  //       audioRef.current.play();
-  //       dispatch(trackSeek(0));
-  //     }
-  //
-  //     if (controlAction === 'pause') {
-  //       audioRef.current.pause();
-  //       dispatch(audioState('stopped'));
-  //     }
-  //     if (controlAction === 'play') {
-  //       audioRef.current.play();
-  //       dispatch(audioState('playing'));
-  //     }
-  //     if ((controlAction === 'next' || controlAction === 'previous') && audioRef.current.src) {
-  //       if (activeAudioState === 'playing') {
-  //         audioRef.current.pause();
-  //         audioRef.current.play();
-  //       } else {
-  //         audioRef.current.pause();
-  //       }
-  //     }
-  //   }
-  // }, [dispatch, audioRef, tracks, activeTrack, activeAudioState, controlAction, clientId]);
-  //
-  // useEffect(() => {
-  //   if (audioRef && tracks.length > 0 && activeAudioState === 'playing') {
-  //     audioRef.current.currentTime = (activeSeek / 100) * audioRef.current.duration;
-  //   }
-  // }, [activeSeek, activeAudioState]);
 
   const handleOnClickEvent = (t: ControlsType) => {
     let c: PlayerControlType | null = null;
@@ -102,7 +54,7 @@ export const PlayerControls = ({clientId}: PlayerControlsProps) => {
     if (!c) {
       return;
     }
-    dispatch(playerControls(c))
+    dispatch(playerControls(c));
   };
 
   const handleSliderEvent = (p: number) => {

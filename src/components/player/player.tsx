@@ -36,6 +36,7 @@ const SOUNDCLOUD_USER_ID = '81132380';
 const Player: React.FC = () => {
   const dispatch = useDispatch();
   const isLoaded: boolean = useSelector((state: RootState) => state.player.tracksLoaded);
+  const isBackgroundLoaded: boolean = useSelector((state: RootState) => state.player.backgroundLoaded);
   const activeAudioState: AudioStateType | null = useSelector((state: RootState) => state.player.audioState);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>({x: 0, y: 0, w: 0, h: 0});
 
@@ -49,15 +50,12 @@ const Player: React.FC = () => {
     }
   }, [dispatch, isLoaded]);
 
-  useEffect(
-    () => {
-      if (activeAudioState === 'stopped') {
-        const timer = setInterval(() => dispatch(playerControls('next' as PlayerControlType)), 5000);
-        return () => clearInterval(timer);
-      }
-    },
-    [dispatch, activeAudioState]
-  );
+  useEffect(() => {
+    if (activeAudioState === 'stopped' && isBackgroundLoaded) {
+      const timer = setInterval(() => dispatch(playerControls('next' as PlayerControlType)), 5000);
+      return () => clearInterval(timer);
+    }
+    }, [dispatch, activeAudioState, isBackgroundLoaded]);
 
   useScrollPosition(['scroll'], setScrollPosition);
 

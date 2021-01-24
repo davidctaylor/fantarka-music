@@ -41,8 +41,6 @@ export const TrackList = ({onClick }: TrackListProps) => {
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>({x: 0, y: 0, w: 0, h: 0});
 
   useScrollPosition(['scroll'], setScrollPosition);
-
-  // @ts-ignore
   useEffect(() => setTrackDescHeight(refTrackDesc.current.clientHeight), []);
 
   const containerStyle: CSSProperties = {

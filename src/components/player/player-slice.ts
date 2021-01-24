@@ -7,6 +7,7 @@ import { Track, PlayerControlType, AudioStateType } from 'interfaces/index';
 
 interface PlayerState {
   audioState: AudioStateType;
+  backgroundLoaded: boolean;
   controlAction: PlayerControlType;
   error: string | null;
   tracks: Track[];
@@ -29,6 +30,7 @@ const loadTracksFailed = (state: PlayerState, action: PayloadAction<string>) => 
 
 const playerInitialState: PlayerState = {
   audioState: 'stopped',
+  backgroundLoaded: false,
   controlAction: 'idle',
   error: null,
   tracks: [],
@@ -44,6 +46,9 @@ const playerSlice = createSlice({
   reducers: {
     audioState(state: PlayerState, action: PayloadAction<AudioStateType>) {
       state.audioState = action.payload;
+    },
+    backgroundLoaded(state: PlayerState, action: PayloadAction<boolean>) {
+      state.backgroundLoaded = action.payload;
     },
     getTracksSuccess(state, { payload }: PayloadAction<Track[]>) {
       state.error = null;
@@ -78,6 +83,7 @@ export const {
   getTracksSuccess,
   getTracksFailure,
   audioState,
+  backgroundLoaded,
   playerControls,
   trackActive,
   trackProgress,

@@ -5,10 +5,37 @@ import React, {
   Ref
 } from 'react';
 
+import { useDispatch } from 'react-redux';
+import { backgroundLoaded } from "components/player/player-slice";
 import { Particle, rgbToString } from 'lib/index';
 import { useScrollPosition } from 'components/effects/scroll';
 import { ScrollPosition } from 'interfaces/index';
 import './player-background.scss';
+
+interface PlayerBackgroundProps {
+  url: string;
+  width: number;
+  height: number;
+}
+
+const useAnimationFrame = (callback: () => boolean, complete: () => void) => {
+  const requestRef = useRef<number>();
+  const isActiveRef = useRef<boolean>(true);
+
+  const animate = (): void => {
+    isActiveRef.current = callback();
+    if (isActiveRef.current) {
+      requestRef.current = requestAnimationFrame(animate);
+    } else {
+      complete();
+    }
+  };
+
+  useEffect(() => {
+    requestRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(requestRef.current);
+  }, []);
+}
 
 const SPACING = 4;
 
@@ -50,53 +77,54 @@ const createParticles = (ref: Ref<HTMLCanvasElement>, data: ImageData): Particle
   return particles
 };
 
-const animate = (ref: HTMLCanvasElement, particles: Particle[], isLoading: boolean): void => {
-  if (isLoading) {
-    const ctx: CanvasRenderingContext2D = ref.getContext('2d');
-    ctx.clearRect(0, 0, ref.width, ref.height);
-
-    if (animateInitial(ref, particles)) {
-      requestAnimationFrame(() => animate(ref, particles, true));
-    }
-  }
-}
-
 const animateInitial = (ref: HTMLCanvasElement, particles: Particle[]): boolean => {
   let isLoading = true;
   particles.forEach((particle: Particle) => {
     let direction = {x: particle.hx - particle.x, y: particle.hy - particle.y},
       distance = Math.sqrt(direction.x * direction.x + direction.y * direction.y),
-      speed = Math.random() * (distance > 1 ? Math.min(distance, 100) : distance);
+      speed = Math.random() * (distance > 1 ? Math.min(distance, 150) : distance);
 
     direction = Particle.normalize(direction);
     direction.x = direction.x * speed;
     direction.y = direction.y * speed;
 
-    particle.x += direction.x;
-    particle.y += direction.y;
+    // if (direction.x < 1) {
+    //   direction.x = particle.hx;
+    // }
+    //
+    // if (direction.y < 1) {
+    //   direction.y = particle.hy;
+    // }
+
+    if (distance < 1) {
+      particle.x = particle.hx;
+      particle.y = particle.hy;
+    } else {
+      particle.x += direction.x;
+      particle.y += direction.y;
+    }
 
     isLoading = distance > 0;
+    // if (!isLoading) {
+    //   console.log('XXX PARTICLE', particle);
+    // }
 
     drawParticle(ref, particle);
   });
   return isLoading;
-}
+};
 
 const drawParticle = (ref: HTMLCanvasElement, particle: Particle) => {
   const ctx: CanvasRenderingContext2D = ref.getContext('2d');
   const particleSize = 2;
   ctx.fillStyle = particle.color;
   ctx.fillRect(particle.x, particle.y, particleSize, particleSize);
-}
-
-interface PlayerBackgroundProps {
-  url: string;
-  width: number;
-  height: number;
-}
+};
 
 export const PlayerBackground = ({url, width, height}: PlayerBackgroundProps) => {
   const canvasRef: Ref<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null);
+  const dispatch = useDispatch();
+  const particlesRef  = useRef<Particle[]>([]);
   const [canvasImage, setCanvasImage] = useState<HTMLImageElement>(null);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>({x: 0, y: 0, w: 0, h: 0});
 
@@ -104,13 +132,11 @@ export const PlayerBackground = ({url, width, height}: PlayerBackgroundProps) =>
 
   useEffect(() => {
     loadBackgroundImage(url)
-      .then((img: HTMLImageElement) => {
-        setCanvasImage(img);
-      }, (err) => console.log('Error loading image:', err));
+      .then((img: HTMLImageElement) => setCanvasImage(img),
+        (err) => console.log('Error loading image:', err));
   }, [url]);
 
   useEffect(() => {
-    // @ts-ignore
     if (!canvasImage) {
       return;
     }
@@ -123,10 +149,16 @@ export const PlayerBackground = ({url, width, height}: PlayerBackgroundProps) =>
 
     const ctx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
     ctx.drawImage(canvasImage, 0, 0, width, height);
-    const particles: Particle[] = createParticles(canvasRef, ctx.getImageData(0, 0, width, height));
-
-    animate(canvasRef.current, particles, true);
+    particlesRef.current = createParticles(canvasRef, ctx.getImageData(0, 0, width, height));
   }, [canvasImage]);
+
+  useAnimationFrame((): boolean => {
+    const ctx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    return animateInitial(canvasRef.current, particlesRef.current);
+  }, (): void => {
+    dispatch(backgroundLoaded(true))
+  });
 
   useEffect(() => {
     if (!canvasRef.current) {

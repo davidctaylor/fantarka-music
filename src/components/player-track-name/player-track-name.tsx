@@ -52,7 +52,7 @@ const initializeCanvas = (ref: Ref<HTMLCanvasElement>, tracks: Track[]): TrackDa
   ctx.font = `${TEXT_SIZE}px Syncopate`;
   ctx.textBaseline = 'middle';
 
-  return tracks.map((track: Track, idx: number): TrackData => {
+  const trackData: TrackData[] = tracks.map((track: Track, idx: number): TrackData => {
     let textMetrics: TextMetrics = ctx.measureText(track.title);
     ctx.fillText(track.title,
       0,
@@ -65,6 +65,9 @@ const initializeCanvas = (ref: Ref<HTMLCanvasElement>, tracks: Track[]): TrackDa
       track.title
     );
   });
+
+  ctx.clearRect(0, 0, width, height);
+  return trackData;
 }
 
 const createParticleArray = (ref: Ref<HTMLCanvasElement>, width: number, height: number): Particle[] => {
@@ -181,28 +184,39 @@ const setTrackIdle = (trackObject: TrackData) => {
 
 export const PlayerTrackName = () => {
   const tracks: Track[] = useSelector((state: RootState) => state.player.tracks);
+  const isBackgroundLoaded: boolean = useSelector((state: RootState) => state.player.backgroundLoaded);
   const trackActive: number = useSelector((state: RootState) => state.player.trackActive);
   const canvasRef: Ref<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null);
-  const [trackParticles, setTrackParticles] = useState<TrackData[]>([]);
+  const [trackParticles, setTrackParticles] = useState<TrackData[]>(null);
   const [previousTrackActive, setPreviousTrackActive] = useState<number>(0);
 
   useEffect(() => {
-    if (tracks.length === 0) {
-      return;
+    if (tracks.length > 0) {
+      const data: TrackData[] = initializeCanvas(canvasRef, tracks);
+      setTrackParticles(data);
+      // setTrackNext(canvasRef, data[0]);
+      // animate(canvasRef, data);
     }
-    const data: TrackData[] = initializeCanvas(canvasRef, tracks);
-    setTrackParticles(data);
-    setTrackNext(canvasRef, data[0]);
-    animate(canvasRef, data);
   }, [tracks]);
 
-  const nextTrack = useEffect(() => {
-    if (tracks.length === 0 || trackActive === previousTrackActive) {
-      return;
+  useEffect(() => {
+    if (isBackgroundLoaded && trackParticles.length > 0) {
+      // const data: TrackData[] = initializeCanvas(canvasRef, tracks);
+      // setTrackParticles(data);
+      setTrackNext(canvasRef, trackParticles[0]);
+      animate(canvasRef, trackParticles);
     }
-    setTrackNext(canvasRef, trackParticles[trackActive]);
-    setTrackIdle(trackParticles[previousTrackActive]);
-  }, [previousTrackActive, trackActive, trackParticles]);
+  }, [isBackgroundLoaded]);
+
+  const nextTrack = useEffect(() => {
+    if (tracks.length > 0 && isBackgroundLoaded && trackParticles.length > 0) {
+      if (trackActive === previousTrackActive) {
+        return;
+      }
+      setTrackIdle(trackParticles[previousTrackActive]);
+      setTrackNext(canvasRef, trackParticles[trackActive]);
+    }
+  }, [previousTrackActive, trackActive, trackParticles, isBackgroundLoaded]);
 
   useEffect(() => {
     setPreviousTrackActive(trackActive);

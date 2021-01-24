@@ -24,6 +24,7 @@ export const PlayerAudio = ({clientId, streamURL, controlAction}: PlayerAudioPro
   const dispatch = useDispatch();
   const tracks: Track[] = useSelector((state: RootState) => state.player.tracks);
   const activeTrack: number = useSelector((state: RootState) => state.player.trackActive);
+  const tracksLoaded: boolean = useSelector((state: RootState) => state.player.tracksLoaded);
   const activeSeek: number = useSelector((state: RootState) => state.player.trackSeek);
   const activeAudioState: AudioStateType | null = useSelector((state: RootState) => state.player.audioState);
   const audioRef: Ref<HTMLAudioElement> = useRef<HTMLAudioElement>(null);
@@ -73,10 +74,10 @@ export const PlayerAudio = ({clientId, streamURL, controlAction}: PlayerAudioPro
   }, [dispatch, audioRef, tracks, activeTrack, activeAudioState, controlAction, clientId, playerActive]);
 
   useEffect(() => {
-    if (audioRef && tracks.length > 0 && activeAudioState === 'playing') {
+    if (audioRef && !Number.isNaN(audioRef.current.duration) && tracksLoaded && activeAudioState === 'playing') {
       audioRef.current.currentTime = (activeSeek / 100) * audioRef.current.duration;
     }
-  }, [activeSeek, tracks, activeAudioState]);
+  }, [activeSeek, tracksLoaded, activeAudioState]);
 
   return <audio autoPlay={!playerActive}
                 ref={audioRef}
