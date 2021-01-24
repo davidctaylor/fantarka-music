@@ -188,39 +188,32 @@ export const PlayerTrackName = () => {
   const trackActive: number = useSelector((state: RootState) => state.player.trackActive);
   const canvasRef: Ref<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null);
   const [trackParticles, setTrackParticles] = useState<TrackData[]>(null);
-  const [previousTrackActive, setPreviousTrackActive] = useState<number>(0);
+  const previousTrackActive = useRef<number>(0);
 
   useEffect(() => {
     if (tracks.length > 0) {
       const data: TrackData[] = initializeCanvas(canvasRef, tracks);
       setTrackParticles(data);
-      // setTrackNext(canvasRef, data[0]);
-      // animate(canvasRef, data);
     }
   }, [tracks]);
 
   useEffect(() => {
     if (isBackgroundLoaded && trackParticles.length > 0) {
-      // const data: TrackData[] = initializeCanvas(canvasRef, tracks);
-      // setTrackParticles(data);
       setTrackNext(canvasRef, trackParticles[0]);
       animate(canvasRef, trackParticles);
     }
   }, [isBackgroundLoaded]);
 
-  const nextTrack = useEffect(() => {
+  useEffect(() => {
     if (tracks.length > 0 && isBackgroundLoaded && trackParticles.length > 0) {
-      if (trackActive === previousTrackActive) {
+      if (trackActive === previousTrackActive.current) {
         return;
       }
-      setTrackIdle(trackParticles[previousTrackActive]);
+      setTrackIdle(trackParticles[previousTrackActive.current]);
       setTrackNext(canvasRef, trackParticles[trackActive]);
+      previousTrackActive.current = trackActive;
     }
-  }, [previousTrackActive, trackActive, trackParticles, isBackgroundLoaded]);
-
-  useEffect(() => {
-    setPreviousTrackActive(trackActive);
-  }, [nextTrack, trackActive]);
+  }, [trackActive]);
 
   return (
     <div className='track-name-container'>

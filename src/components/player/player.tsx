@@ -52,7 +52,7 @@ const Player: React.FC = () => {
 
   useEffect(() => {
     if (activeAudioState === 'stopped' && isBackgroundLoaded) {
-      const timer = setInterval(() => dispatch(playerControls('next' as PlayerControlType)), 5000);
+      const timer = setInterval(() => dispatch(playerControls('next' as PlayerControlType)), 3000);
       return () => clearInterval(timer);
     }
     }, [dispatch, activeAudioState, isBackgroundLoaded]);
