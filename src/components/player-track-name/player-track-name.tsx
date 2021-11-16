@@ -198,14 +198,14 @@ export const PlayerTrackName = () => {
   }, [tracks]);
 
   useEffect(() => {
-    if (isBackgroundLoaded && trackParticles.length > 0) {
+    if (isBackgroundLoaded && trackParticles && trackParticles.length > 0) {
       setTrackNext(canvasRef, trackParticles[0]);
       animate(canvasRef, trackParticles);
     }
-  }, [isBackgroundLoaded]);
+  }, [isBackgroundLoaded, trackParticles]);
 
   useEffect(() => {
-    if (tracks.length > 0 && isBackgroundLoaded && trackParticles.length > 0) {
+    if (tracks.length > 0 && isBackgroundLoaded && trackParticles && trackParticles.length > 0) {
       if (trackActive === previousTrackActive.current) {
         return;
       }
@@ -213,7 +213,7 @@ export const PlayerTrackName = () => {
       setTrackNext(canvasRef, trackParticles[trackActive]);
       previousTrackActive.current = trackActive;
     }
-  }, [trackActive]);
+  }, [trackActive, isBackgroundLoaded, trackParticles]);
 
   return (
     <div className='track-name-container'>

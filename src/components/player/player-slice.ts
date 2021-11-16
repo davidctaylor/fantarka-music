@@ -4,6 +4,7 @@ import SC from 'soundcloud';
 
 import { AppThunk } from 'store/store'
 import { Track, PlayerControlType, AudioStateType } from 'interfaces/index';
+import { LOCAL_TRACKS } from './tracks-local';
 
 interface PlayerState {
   audioState: AudioStateType;
@@ -23,6 +24,9 @@ const loadTracks = (userId: string, clientId: string): Promise<Track[]> => {
     limit: 100
   });
 };
+
+const loadLocalTracks = (userId: string, clientId: string): Promise<Track[]> => 
+  new Promise((resolve) => resolve(LOCAL_TRACKS));
 
 const loadTracksFailed = (state: PlayerState, action: PayloadAction<string>) => {
   state.error = action.payload;
@@ -94,13 +98,13 @@ export default playerSlice.reducer;
 
 export const fetchTracks = (userId: string, clientId: string): AppThunk => async dispatch => {
   try {
-    let tracks: Track[] = await loadTracks(userId, clientId);
-    tracks = tracks.map((t: Track) => {
-      return {
-        ...t,
-        artwork_url: t.artwork_url ? t.artwork_url.replace('-large', '-t500x500') : null,
-      };
-    });
+    let tracks: Track[] = await loadLocalTracks(userId, clientId);
+    // tracks = tracks.map((t: Track) => {
+    //   return {
+    //     ...t,
+    //     artwork_url: t.artwork_url ? t.artwork_url.replace('-large', '-t500x500') : null,
+    //   };
+    // });
 
     dispatch(getTracksSuccess(tracks));
   } catch (err) {

@@ -22,6 +22,7 @@ const useAnimationFrame = (callback: () => boolean, complete: () => void) => {
   const requestRef = useRef<number>();
   const isActiveRef = useRef<boolean>(true);
 
+
   const animate = (): void => {
     isActiveRef.current = callback();
     if (isActiveRef.current) {
@@ -79,24 +80,17 @@ const createParticles = (ref: Ref<HTMLCanvasElement>, data: ImageData): Particle
 
 const animateInitial = (ref: HTMLCanvasElement, particles: Particle[]): boolean => {
   let isLoading = true;
+  let width = ref.width;
   particles.forEach((particle: Particle) => {
     let direction = {x: particle.hx - particle.x, y: particle.hy - particle.y},
       distance = Math.sqrt(direction.x * direction.x + direction.y * direction.y),
-      speed = Math.random() * (distance > 1 ? Math.min(distance, 150) : distance);
+      speed = Math.random() * (distance > 1 ? Math.min(distance, width / 2) : distance);
 
     direction = Particle.normalize(direction);
     direction.x = direction.x * speed;
     direction.y = direction.y * speed;
 
-    // if (direction.x < 1) {
-    //   direction.x = particle.hx;
-    // }
-    //
-    // if (direction.y < 1) {
-    //   direction.y = particle.hy;
-    // }
-
-    if (distance < 1) {
+    if (distance < Math.max(10, width / 10)) {
       particle.x = particle.hx;
       particle.y = particle.hy;
     } else {
@@ -105,9 +99,6 @@ const animateInitial = (ref: HTMLCanvasElement, particles: Particle[]): boolean 
     }
 
     isLoading = distance > 0;
-    // if (!isLoading) {
-    //   console.log('XXX PARTICLE', particle);
-    // }
 
     drawParticle(ref, particle);
   });

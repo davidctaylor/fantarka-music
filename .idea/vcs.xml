@@ -3,5 +3,9 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/x/fantarka-music" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/x/r-audio" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/yy/fantarka-music" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/yy/r-audio" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/yy/react-audio-player" vcs="Git" />
   </component>
 </project>
